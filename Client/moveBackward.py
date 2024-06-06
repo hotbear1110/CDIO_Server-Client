@@ -3,17 +3,17 @@ from pybricks.ev3devices import Motor
 from pybricks.parameters import Port
 
 #Speed variable
-speed = 500
+speed = -500
 
-# Initialize brick
-ev3 = EV3Brick()
+#Initialise brick
+ev3 = EV3Brick
 
-# Initialize motors
+#Initialize motors
 left_motor = Motor(Port.A)
 right_motor = Motor(Port.B)
 
-def move_forward():
+def move_backward():
     left_motor.run(speed)
     right_motor.run(speed)
 
-move_forward()
+move_backward()
