@@ -15,7 +15,7 @@ right_motor = Motor(Port.B)
 
 # move_wiggle function
 def move_wiggle():
-    for i in range(4):  # repeat 4 times
+    for i in range(4):  # repeats 4 times
         left_motor.run_time(speed, 200, then=Stop.COAST, wait=True)
         wait(500)
         right_motor.run_time(speed, 200, then=Stop.COAST, wait=True)
