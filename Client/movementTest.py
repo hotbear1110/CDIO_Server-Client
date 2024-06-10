@@ -9,23 +9,28 @@ from moveWiggle import *
 
 # calling functions
 move_forward()
+wait(2000)
 
-#move_stop()
+move_stop()
 
-#move_backward()
+move_backward()
+wait(2000)
 
-#move_stop()
+move_stop()
 
-#move_left()
+move_left()
+wait(2000)
 
-#move_stop()
+move_stop()
 
-#move_right()
+move_right()
+wait(2000)
 
-#move_stop()
+move_stop()
 
-#move_wiggle()
+move_wiggle()
+wait(2000)
 
-#move_stop
+move_stop
 
 
