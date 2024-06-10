@@ -1,3 +1,4 @@
+#!/usr/bin/env pybricks-micropython
 # imports
 from moveBackward import *
 from moveForward import *
