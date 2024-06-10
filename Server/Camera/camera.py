@@ -1,18 +1,8 @@
 from ultralytics import YOLO
-import cv2
+import os
 import math 
+import cv2
 import numpy as np
-
-# start webcam
-cap = cv2.VideoCapture("test_video.mp4")
-if not cap.isOpened():
- print("Cannot open camera")
- exit()
-cap.set(3, 640)
-cap.set(4, 480)
-
-# model
-model = YOLO("model_- 10 april 2024 9_41.pt")
 
 # colors
 colors = {
@@ -27,25 +17,18 @@ colors = {
     "robot": (255, 0, 0),
 }
 
-class BoxObject:
-    def __init__(self, name, x1, y1, x2, y2):
-        self.name = name
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+def drawInGrid(img, x1, y1, x2, y2, rgb):
+    bgr = (rgb[2], rgb[1], rgb[0])
+    # First we crop the sub-rect from the image
+    sub_img = img[y1:y2, x1:x2]
+    rect = np.ones(sub_img.shape, dtype=np.uint8) * bgr
+    rect = np.asarray(rect, np.uint8)
 
-    def __str__(self):
-        return f"{self.name}(x1: {self.x1}, y1:{self.y1}, x2:{self.x2}, y2:{self.y2})"   
+    res = cv2.addWeighted(sub_img, 0.5, rect, 0.5, 1.0)
 
-    def updateBox(self, name, x1, y1, x2, y2):
-        self.name = name
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+    # Putting the image back to its position
+    img[y1:y2, x1:x2] = res
 
-boxObjects = {}
 
 class Box: 
     def __init__(self):
@@ -69,75 +52,103 @@ class Grid:
         return self.boxes(math.ceil(pos_x/self.precision), math.ceil(pos_y/self.precision))
 
     def addBox(self, pos_x1, pos_y1, pos_x2, pos_y2, name):
-        x_boxes = math.ceil((self.res_x-pos_x1)/self.precision)-(math.ceil((self.res_x-pos_x2)/self.precision))+1
-        y_boxes = math.ceil((self.res_y-pos_y1)/self.precision)-(math.ceil((self.res_y-pos_y2)/self.precision))+1
+        x_boxes = math.ceil((self.res_x-pos_x1)/self.precision)-(math.floor((self.res_x-pos_x2)/self.precision))
+        y_boxes = math.ceil((self.res_y-pos_y1)/self.precision)-(math.floor((self.res_y-pos_y2)/self.precision))
+        positions = []
         
         for x in range(x_boxes):
             for y in range(y_boxes):
-                self.boxes[min(round(pos_x2/self.precision)+x-1, self.cols - 1)][min(round(pos_y2/self.precision)+y-1, self.rows - 1)].updateName(name)
+                position = [min(math.ceil(max(pos_x1, 1)/self.precision)+x, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y, self.rows - 1)]
+                self.boxes[position[0]][position[1]].updateName(name)
+
+                positions.append(position)
+
+        return positions
 
 
-while True:
-    success, img = cap.read()
-    results = model(img, stream=True)
+def runModel(cap):
 
-    grid = Grid(1920, 1080, 25)
+    print('Choose a model:')
 
-    # coordinates
-    for r in results:
-        boxes = r.boxes
+    models = []
 
-        for box in boxes:
-            # bounding box
-            x1, y1, x2, y2 = box.xyxy[0]
-            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+    i = 1
 
-            # confidence
-            confidence = math.ceil((box.conf[0]*100))/100
-            #print("Box --->",box)
-            #print("Confidence --->",confidence)
+    for x in os.listdir():
+        if x.startswith("model_"):
+            models.append(x)
+            print(i, ': ', x)
+            i = i + 1
 
-            # class name
-            name = r.names[math.floor(box.cls[0])]
-            #print("Class name --> ", name)
+    model_number = input()
 
-            # object details
-            org = [x1, y1]
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            fontScale = 1
-            color = colors[name]
-            thickness = 2
+    # model
+    model = YOLO(models[int(model_number)-1])
 
-            boxObject = BoxObject(name, x1, y1, x2, y2)
+    os.system('cls')
 
-            boxObjects[name] = boxObject
+    while True:
+        success, img = cap.read()
+        results = model(img, stream=True)
 
-            # put box in cam
-            cv2.rectangle(img, (x1, y1), (x2, y2), color, 3)
-            cv2.putText(img, name, org, font, fontScale, (255, 0, 0), thickness)
+        grid = Grid(cap.get(3), cap.get(4), 25)
 
-            grid.addBox(x1, y1, x2, y2, name)
+        objects = []
 
-        for x in range(grid.cols):
-            for y in range(grid.rows):
+        # coordinates
+        for r in results:
+            boxes = r.boxes
+
+            for box in boxes:
+                # bounding box
+                x1, y1, x2, y2 = box.xyxy[0]
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+
+                # confidence
+                confidence = math.ceil((box.conf[0]*100))/100
+                #print("Box --->",box)
+                #print("Confidence --->",confidence)
+
+                # class name
+                name = r.names[math.floor(box.cls[0])]
+                #print("Class name --> ", name)
+
+                # object details
+                org = [x1, y1]
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                fontScale = 1
+                color = colors[name]
+                thickness = 2
+
+                # put box in cam
+                cv2.rectangle(img, (x1, y1), (x2, y2), color, 3)
+                cv2.putText(img, name, org, font, fontScale, (255, 0, 0), thickness)
+
+                positions = grid.addBox(x1, y1, x2, y2, name)
+
+                objects = objects + positions
+
+            for position in objects:
+                x = position[0]
+                y = position[1]
+
                 x1, y1, x2, y2 = x*grid.precision-grid.precision, y*grid.precision-grid.precision, x * grid.precision, y * grid.precision
+
                 if grid.boxes[x][y].name == "WBall":
-                    # First we crop the sub-rect from the image
-                    sub_img = img[y1:y2, x1:x2]
-                    white_rect = np.ones(sub_img.shape, dtype=np.uint8) * 255
-
-                    res = cv2.addWeighted(sub_img, 0.5, white_rect, 0.5, 1.0)
-
-                    # Putting the image back to its position
-                    img[y1:y2, x1:x2] = res
-                    #cv2.rectangle(img, (x*grid.precision-grid.precision, y*grid.precision-grid.precision), (x * grid.precision, y * grid.precision), (255, 255, 255, 100), -1)
+                    rgb = [255, 255, 255]
+                    drawInGrid(img, x1, y1, x2, y2, rgb)
+                elif grid.boxes[x][y].name == "OBall":
+                    rgb = [255, 165, 0]
+                    drawInGrid(img, x1, y1, x2, y2, rgb)
+                elif grid.boxes[x][y].name == "Obstacle":
+                    rgb = [255, 0, 0]
+                    drawInGrid(img, x1, y1, x2, y2, rgb)
                 else:
                     cv2.rectangle(img, (x*grid.precision-grid.precision, y*grid.precision-grid.precision), (x * grid.precision, y * grid.precision), (255, 255, 255), 1)
 
+        cv2.imshow('Webcam', img)
+        if cv2.waitKey(1) == ord('q'):
+            return
 
-    cv2.imshow('Webcam', img)
-    if cv2.waitKey(1) == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
