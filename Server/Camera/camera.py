@@ -128,6 +128,13 @@ def runModel(cap):
 
                 objects = objects + positions
 
+            #Temp change for visualizing grid
+            for x in range(grid.cols):
+                for y in range(grid.rows):
+                    x1, y1, x2, y2 = x*grid.precision-grid.precision, y*grid.precision-grid.precision, x * grid.precision, y * grid.precision
+
+                    cv2.rectangle(img, (x*grid.precision-grid.precision, y*grid.precision-grid.precision), (x * grid.precision, y * grid.precision), (255, 255, 255), 1)
+
             for position in objects:
                 x = position[0]
                 y = position[1]
