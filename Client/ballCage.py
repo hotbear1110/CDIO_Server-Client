@@ -2,6 +2,7 @@
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import Motor
 from pybricks.parameters import Port, Stop
+from pybricks.ev3dev2.motor import SpeedRPM
 
 degrees = 90
 
@@ -27,3 +28,18 @@ def spin_claw_backward():
     grab_motor.reset_angle(0)
 
 spin_claw_backward()
+
+def spin_claw_forever():
+    grab_motor.run(800)
+
+spin_claw_forever()
+
+def spin_claw_stop():
+    grab_motor.Stop
+
+spin_claw_stop()
+
+def spin_for_given_time():
+    grab_motor.on_for_seconds(SpeedRPM(200),10)
+
+spin_for_given_time()
