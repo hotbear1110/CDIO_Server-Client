@@ -4,7 +4,7 @@ from pybricks.ev3devices import Motor
 from pybricks.parameters import Port, Direction, Stop
 
 # Variables
-speed = 500
+speed = -500
 
 # Initialize the EV3 brick
 ev3 = EV3Brick()
