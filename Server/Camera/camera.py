@@ -8,13 +8,16 @@ import numpy as np
 colors = {
     "Egg": (0, 255, 255),
     "Goal(Large)": (255, 0, 255),
+    "Goal-Large-": (255, 0, 255),
     "Goal(Small)": (255, 0, 255),
+    "Goal-Small-": (255, 0, 255),
     "OBall": (255, 165, 0),
     "Obstacle": (0, 0, 255),
     "WBall": (0, 255, 0),
     "Wall": (0, 0, 255),
     "goosegg-tabletennisball-obstacle": (0, 255, 0),
     "robot": (255, 0, 0),
+    "robotBack": (255, 0, 0),
 }
 
 def drawInGrid(img, x1, y1, x2, y2, rgb):
