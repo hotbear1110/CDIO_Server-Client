@@ -132,14 +132,9 @@ def runModel(cap):
 
                 objects = objects + positions
 
-            #Temp change for visualizing grid
-            for x in range(grid.cols):
-                for y in range(grid.rows):
-                    x1, y1, x2, y2 = x*grid.precision-grid.precision, y*grid.precision-grid.precision, x * grid.precision, y * grid.precision
-
-                    cv2.rectangle(img, (x*grid.precision-grid.precision, y*grid.precision-grid.precision), (x * grid.precision, y * grid.precision), (255, 255, 255), 1)
-
             for position in objects:
+                rgb = [0, 0, 0]
+
                 x = position[0]
                 y = position[1]
 
@@ -147,15 +142,14 @@ def runModel(cap):
 
                 if grid.boxes[x][y].name == "WBall":
                     rgb = [255, 255, 255]
-                    drawInGrid(img, x1, y1, x2, y2, rgb)
                 elif grid.boxes[x][y].name == "OBall":
                     rgb = [255, 165, 0]
-                    drawInGrid(img, x1, y1, x2, y2, rgb)
-                elif grid.boxes[x][y].name == "Obstacle":
+                elif grid.boxes[x][y].name == "Obstacle" or grid.boxes[x][y].name == "Wall":
                     rgb = [255, 0, 0]
-                    drawInGrid(img, x1, y1, x2, y2, rgb)
-                else:
-                    cv2.rectangle(img, (x*grid.precision-grid.precision, y*grid.precision-grid.precision), (x * grid.precision, y * grid.precision), (255, 255, 255), 1)
+                elif grid.boxes[x][y].name == "Egg":
+                    rgb = [255, 255, 0]
+
+                drawInGrid(img, x1, y1, x2, y2, rgb)
 
         cv2.imshow('Webcam', img)
         if cv2.waitKey(1) == ord('q'):
