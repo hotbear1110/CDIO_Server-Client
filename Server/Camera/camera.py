@@ -18,6 +18,7 @@ colors = {
     "goosegg-tabletennisball-obstacle": (0, 255, 0),
     "robot": (255, 0, 0),
     "robotBack": (255, 0, 0),
+    "robotFront": (255, 0, 0),
 }
 
 def drawInGrid(img, x1, y1, x2, y2, rgb):
