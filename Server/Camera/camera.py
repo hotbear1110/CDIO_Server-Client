@@ -41,6 +41,9 @@ class Box:
     def updateName(self, name):
         self.name = name
 
+    def getName(self):
+        return self.name
+
 class Grid:
     def __init__(self, res_x, res_y, precision):
         self.res_x = res_x
@@ -63,9 +66,11 @@ class Grid:
         for x in range(x_boxes):
             for y in range(y_boxes):
                 position = [min(math.ceil(max(pos_x1, 1)/self.precision)+x, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y, self.rows - 1)]
-                self.boxes[position[0]][position[1]].updateName(name)
+                if (name != "Wall" or self.boxes[position[0]][position[1]].getName() == "") and (self.boxes[position[0]][position[1]].getName() != "Egg"): 
 
-                positions.append(position)
+                    self.boxes[position[0]][position[1]].updateName(name)
+
+                    positions.append(position)
 
         return positions
 
@@ -148,6 +153,14 @@ def runModel(cap):
                     rgb = [255, 0, 0]
                 elif grid.boxes[x][y].name == "Egg":
                     rgb = [255, 255, 0]
+                elif grid.boxes[x][y].name == "Goal-Small-":
+                    rgb = [0, 255, 0]
+                elif grid.boxes[x][y].name == "Goal-Large-":
+                    rgb = [255, 255, 0]
+                elif grid.boxes[x][y].name == "robotFront":
+                    rgb = [0, 0, 255]
+                elif grid.boxes[x][y].name == "robotBack":
+                    rgb = [0, 255, 0]
 
                 drawInGrid(img, x1, y1, x2, y2, rgb)
 
