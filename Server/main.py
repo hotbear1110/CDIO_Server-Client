@@ -12,15 +12,16 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("topic/motor-A/dt")
 
 def on_message(client, userdata, msg):
-    print(msg)
+    msg.payload = msg.payload.decode("utf-8")
+    print(msg.payload)
     if (msg.payload == 'Q'):
-      m.stop()
-      client.disconnect()
+        m.stop()
+        client.disconnect()
     elif (-100 <= int(msg.payload) <= 100):
-      m.duty_cycle_sp=msg.payload
+        m.duty_cycle_sp=int(msg.payload)
 
 client = mqtt.Client("Subscriber")
-client.connect("192.168.1.94",1883,60)
+client.connect("localhost",1883,60)
 
 client.on_connect = on_connect
 client.on_message = on_message
