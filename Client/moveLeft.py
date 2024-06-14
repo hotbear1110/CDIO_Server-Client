@@ -1,7 +1,8 @@
 #!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import Motor
-from pybricks.parameters import Port, Direction, Stop
+from pybricks.parameters import Port
+from pybricks.tools import wait
 
 # Variables
 speedright = 500
@@ -21,3 +22,6 @@ def move_left():
 
 # Call the function to move the motor
 move_left()
+wait(200)
+left_motor.stop()
+right_motor.stop()

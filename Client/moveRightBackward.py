@@ -9,7 +9,7 @@ speed = 500
 #Initialize brick
 ev3 = EV3Brick()
 
-#Initiialize motor
+#Initialize motor
 right_motor = Motor(Port.B)
 
 #move_left function

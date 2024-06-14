@@ -13,8 +13,8 @@ ev3 = EV3Brick()
 right_motor = Motor(Port.B)
 
 # Define the move_right function
-def move_right():
+def move_right_motor():
     right_motor.run(speed)
 
 # Call the function to move the motor
-move_right()
+move_right_motor()
