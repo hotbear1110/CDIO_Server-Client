@@ -1,10 +1,11 @@
+#!/usr/bin/env pybricks-micropython
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import Motor
 from pybricks.parameters import Port, Stop
 from pybricks.tools import wait
 
 # Variables
-speed = 500
+speed = -500
 
 # Initialize brick
 ev3 = EV3Brick()
