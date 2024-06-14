@@ -74,8 +74,14 @@ class Grid:
 
         return positions
 
+    def flushGrid(self):
+        self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
+
+grid = Grid(1,1,1)
 
 def runModel(cap):
+
+    grid = Grid(cap.get(3), cap.get(4), 25)
 
     print('Choose a model:')
 
@@ -99,8 +105,6 @@ def runModel(cap):
     while True:
         success, img = cap.read()
         results = model(img, stream=True)
-
-        grid = Grid(cap.get(3), cap.get(4), 25)
 
         objects = []
 
@@ -167,6 +171,61 @@ def runModel(cap):
         cv2.imshow('Webcam', img)
         if cv2.waitKey(1) == ord('q'):
             return
+        grid.flushGrid()
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+def runLowPerformanceModel(cap):
+
+    grid = Grid(cap.get(3), cap.get(4), 25)
+
+    print('Choose a model:')
+
+    models = []
+
+    i = 1
+
+    for x in os.listdir():
+        if x.startswith("model_"):
+            models.append(x)
+            print(i, ': ', x)
+            i = i + 1
+
+    model_number = input()
+
+    # model
+    model = YOLO(models[int(model_number)-1])
+
+    os.system('cls')
+
+    while True:
+        success, img = cap.read()
+        results = model(img, stream=True)
+
+        # coordinates
+        for r in results:
+            boxes = r.boxes
+
+            for box in boxes:
+                # bounding box
+                x1, y1, x2, y2 = box.xyxy[0]
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+
+                # confidence
+                confidence = math.ceil((box.conf[0]*100))/100
+                #print("Box --->",box)
+                #print("Confidence --->",confidence)
+
+                # class name
+                name = r.names[math.floor(box.cls[0])]
+                #print("Class name --> ", name)
+
+                grid.addBox(x1, y1, x2, y2, name)
+
+        if cv2.waitKey(1) == ord('q'):
+            return
+        grid.flushGrid()
 
     cap.release()
     cv2.destroyAllWindows()
