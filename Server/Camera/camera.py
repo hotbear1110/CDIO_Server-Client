@@ -132,6 +132,26 @@ class Grid:
     def flushGrid(self):
         self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
 
+    def copyGrid(self, grid):
+        self.res_x = grid.res_x
+        self.res_y = grid.res_y
+        self.precision = grid.precision
+        self.size = grid.size
+        self.cols = grid.cols
+        self.rows = grid.rows
+
+        self.boxes = grid.boxes
+
+        self.robot = grid.robot
+        self.robotFront = grid.robotFront
+        self.robotBack = grid.robotBack
+        self.egg = grid.egg
+        self.obstacle = grid.obstacle
+        self.oBall = grid.oBall
+        self.wBalls = grid.wBalls
+        self.goalSmall = grid.goalSmall
+        self.goalLarge = grid.goalLarge
+
 global grid
 grid = Grid(1,1,1)
 
@@ -143,6 +163,8 @@ def runModel(cap):
     global grid
 
     grid = Grid(cap.get(3), cap.get(4), 10)
+
+    tmp_grid = Grid(cap.get(3), cap.get(4), 10)
 
     print('Choose a model:')
 
@@ -198,9 +220,11 @@ def runModel(cap):
                 cv2.rectangle(img, (x1, y1), (x2, y2), color, 3)
                 cv2.putText(img, name, org, font, fontScale, (255, 0, 0), thickness)
 
-                positions = grid.addBox(x1, y1, x2, y2, name)
+                positions = tmp_grid.addBox(x1, y1, x2, y2, name)
 
                 objects = objects + positions
+
+            grid.copyGrid(tmp_grid)
 
             for position in objects:
                 rgb = [0, 0, 0]
@@ -232,7 +256,7 @@ def runModel(cap):
         cv2.imshow('Webcam', img)
         if cv2.waitKey(1) == ord('q'):
             return
-        grid.flushGrid()
+        tmp_grid.flushGrid()
 
     cap.release()
     cv2.destroyAllWindows()
@@ -241,6 +265,8 @@ def runLowPerformanceModel(cap):
     global grid
 
     grid = Grid(cap.get(3), cap.get(4), 25)
+
+    tmp_grid = Grid(cap.get(3), cap.get(4), 10)
 
     print('Choose a model:')
 
@@ -283,11 +309,12 @@ def runLowPerformanceModel(cap):
                 name = r.names[math.floor(box.cls[0])]
                 #print("Class name --> ", name)
 
-                grid.addBox(x1, y1, x2, y2, name)
+                tmp_grid.addBox(x1, y1, x2, y2, name)
 
+        grid.copyGrid(tmp_grid)
         if cv2.waitKey(1) == ord('q'):
             return
-        grid.flushGrid()
+        tmp_grid.flushGrid()
 
     cap.release()
     cv2.destroyAllWindows()
