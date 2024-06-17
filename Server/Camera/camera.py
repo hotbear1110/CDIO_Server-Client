@@ -55,8 +55,43 @@ class Grid:
 
         self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
 
-    def getBox(self, pos_x, pos_y):
-        return self.boxes(math.ceil(pos_x/self.precision), math.ceil(pos_y/self.precision))
+        self.robot = (0, 0)
+        self.robotFront = (0, 0)
+        self.robotBack = (0, 0)
+        self.egg = (0, 0)
+        self.obstacle = (0, 0)
+        self.oBall = (0, 0)
+        self.wBalls = []
+        self.goalSmall = (0, 0)
+        self.goalLarge = (0, 0)
+
+    def getRobot(self):
+        return self.robot
+
+    def getRobotFront(self):
+        return self.robotFront
+        
+    def getRobotBack(self):
+        return self.robotBack
+        
+    def getEgg(self):
+        return self.egg
+    
+    def getObstacle(self):
+        return self.obstacle
+    
+    def getOball(self):
+        return self.oBall
+    
+    def getWballs(self):
+        return self.wBalls
+    
+    def getGoalSmall(self):
+        return self.goalSmall
+    
+    def getGoalLarge(self):
+        return self.goalLarge
+        
 
     def addBox(self, pos_x1, pos_y1, pos_x2, pos_y2, name):
         x_boxes = math.ceil((self.res_x-pos_x1)/self.precision)-(math.floor((self.res_x-pos_x2)/self.precision))
@@ -66,6 +101,26 @@ class Grid:
         for x in range(x_boxes):
             for y in range(y_boxes):
                 position = [min(math.ceil(max(pos_x1, 1)/self.precision)+x, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y, self.rows - 1)]
+
+                if name == "WBall":
+                   self.wBalls.append((position[0], position[1]))
+                elif name == "OBall":
+                    self.oBall = ((position[0], position[1]))
+                elif name == "Egg":
+                    self.egg = ((position[0], position[1]))
+                elif name == "robot":
+                    self.robot = ((position[0], position[1]))
+                elif name == "robotFront":
+                    self.robotFront = ((position[0], position[1]))
+                elif name == "robotBack":
+                    self.robotBack = ((position[0], position[1]))
+                elif name == "Goal-Small-":
+                    self.goalSmall = ((position[0], position[1]))
+                elif name == "Goal-Large-":
+                    self.goalLarge = ((position[0], position[1]))
+                elif name == "Obstacle":
+                    self.obstacle = ((position[0], position[1]))
+
                 if (name != "Wall" or self.boxes[position[0]][position[1]].getName() == "") and (self.boxes[position[0]][position[1]].getName() != "Egg"): 
 
                     self.boxes[position[0]][position[1]].updateName(name)
