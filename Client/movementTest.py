@@ -12,8 +12,6 @@ from ballCage import *
 
 # calling functions
 
-spin_claw_forever()
-
 move_right
 
 
