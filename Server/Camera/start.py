@@ -1,6 +1,8 @@
 import cv2
 import os
 from camera import runModel, runLowPerformanceModel
+import threading
+from client import algo
 
 usr_input = 0
 
@@ -18,10 +20,24 @@ def chooseVersion(cap):
     os.system('cls')
 
     if x == '1':
-        runModel(cap)
+        t1 = threading.Thread(target=runModel, args=[cap])
+        t2 = threading.Thread(target=algo)
+
+        t1.start()
+        t2.start()
+
+        t1.join()
+        t2.join()
         return 0
     elif x == '2':
-        runLowPerformanceModel(cap)
+        t1 = threading.Thread(target=runLowPerformanceModel, args=[cap])
+        t2 = threading.Thread(target=algo)
+
+        t1.start()
+        t2.start()
+
+        t1.join()
+        t2.join()
         return 0
     elif x == '3':
         return 1

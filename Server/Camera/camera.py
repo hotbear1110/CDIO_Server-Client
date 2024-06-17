@@ -77,11 +77,17 @@ class Grid:
     def flushGrid(self):
         self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
 
+global grid
 grid = Grid(1,1,1)
 
-def runModel(cap):
+def getGrid():
+    global grid
+    return grid
 
-    grid = Grid(cap.get(3), cap.get(4), 25)
+def runModel(cap):
+    global grid
+
+    grid = Grid(cap.get(3), cap.get(4), 10)
 
     print('Choose a model:')
 
@@ -177,6 +183,7 @@ def runModel(cap):
     cv2.destroyAllWindows()
 
 def runLowPerformanceModel(cap):
+    global grid
 
     grid = Grid(cap.get(3), cap.get(4), 25)
 
