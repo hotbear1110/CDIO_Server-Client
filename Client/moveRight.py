@@ -1,57 +1,49 @@
-#!/usr/bin/env pybricks-micropython
-from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import Motor, GyroSensor
-from pybricks.parameters import Port
-from pybricks.tools import wait
+#!/usr/bin/env python3
+from ev3dev.auto import *
 
 # Variables
-speedright = 75  # Adjusted motor speeds for turning right
-speedleft = -75
-slow_speedright = 30  # Slower speed for fine-tuning the turn
-slow_speedleft = -30
-target_angle = 100  # Target angle to turn right
-slowdown_threshold = 20  # Angle threshold to start slowing down
-
-# Initialize the EV3 brick
-ev3 = EV3Brick()
+speedright = 25  # Adjusted motor speeds for turning right
+speedleft = -25
+slow_speedright = 16  # Slower speed for fine-tuning the turn
+slow_speedleft = -16
+target_angle = 90  # Target angle to turn right
+slowdown_threshold = 45  # Angle threshold to start slowing down
 
 # Initialize the motors and gyro sensor
-left_motor = Motor(Port.A)
-right_motor = Motor(Port.B)
-gyro_sensor = GyroSensor(Port.S1)
+left_motor = Motor(OUTPUT_A)
+right_motor = Motor(OUTPUT_B)
+gyro_sensor = GyroSensor(INPUT_1)
+gyro_sensor.mode = 'GYRO-ANG'
 
-# Reset the gyro sensor angle to 0
-gyro_sensor.reset_angle(0)
+def move_left():
+    # Reset the gyro sensor to 0 degrees
+    gyro_sensor.mode = 'GYRO-RATE'  # Temporarily switch to rate mode to reset the sensor
+    gyro_sensor.mode = 'GYRO-ANG'  # Switch back to angle mode
 
-# Define the move_right function
-def move_right():
     # Start the motors
-    right_motor.run(speedright)
-    left_motor.run(speedleft)
+    left_motor.run_direct()
+    right_motor.run_direct()
 
-    # Loop until the gyro sensor measures the target angle
-    while gyro_sensor.angle() < target_angle:
-        # Check if the angle is within the slowdown threshold
-        if gyro_sensor.angle() < target_angle - slowdown_threshold:
-            # Continue at full speed
-            right_motor.run(speedright)
-            left_motor.run(speedleft)
+    # Turn until the target angle is reached
+    while True:
+        # Read the current angle from the gyro sensor
+        current_angle = gyro_sensor.value()
+
+        # Check if we are close to the target angle
+        if abs(target_angle - current_angle) <= slowdown_threshold:
+            # If close to the target angle, use slow speed
+            left_motor.duty_cycle_sp = slow_speedleft
+            right_motor.duty_cycle_sp = slow_speedright
         else:
-            # Slow down as the robot approaches the target angle
-            right_motor.run(slow_speedright)
-            left_motor.run(slow_speedleft)
+            # If not close to the target angle, use regular speed
+            left_motor.duty_cycle_sp = speedleft
+            right_motor.duty_cycle_sp = speedright
 
-        # Print the current gyro angle to the EV3 screen
-        ev3.screen.clear()
-        ev3.screen.draw_text(0, 0, "Angle: {}".format(gyro_sensor.angle()))
-        # Print the current gyro angle to the terminal
-        print("Angle: {}".format(gyro_sensor.angle()))
-        
-        wait(10)  # Small wait to avoid busy waiting
+        # Check if we have reached the target angle
+        if current_angle == target_angle:
+            # Stop the motors
+            left_motor.stop()
+            right_motor.stop()
+            break
 
-    # Stop the motors
-    left_motor.stop()
-    right_motor.stop()
-
-# Call the function to move the motor
-move_right()
+move_left()
