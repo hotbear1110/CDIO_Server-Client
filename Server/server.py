@@ -1,30 +1,41 @@
-#!/usr/bin/env micropython
+#!/usr/bin/env python3
 
-from ev3dev.auto import *
-# This is the Subscriber
-MQTT_ClientID = "cat"
-MQTT_Broker = '192.168.1.156'
+import paho.mqtt.client as mqtt
+import time
 
-m = Motor(OUTPUT_A)
+MQTT_Broker = '192.168.94.34'
 
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    client.subscribe("topic/motor-A/dt")
+client = mqtt.Client("publisher")
+client.connect(MQTT_Broker,1883,60)
 
-def on_message(client, userdata, msg):
-    if (msg.payload == 'Q'):
-      m.stop()
-      client.disconnect()
-    elif (-100 <= int(msg.payload) <= 100):
-      m.duty_cycle_sp=msg.payload
+def sendMoveForward():
+  client.publish("moveForward", 0)
 
-client = MQTTClient(MQTT_ClientID, MQTT_Broker)
-client.connect()
+def sendMoveBackward():
+  client.publish("moveBackward", 0)
 
-client.on_connect = on_connect
-client.on_message = on_message
+def sendMoveLeft():
+  client.publish("moveLeft", 0)
 
-m.run_direct()
-m.duty_cycle_sp=0
+def sendMoveLeftBackward():
+  client.publish("moveLeftBackward", 0)
+
+def sendMoveLeftMotor():
+  client.publish("moveLeftMotor", 0)
+
+def sendMoveRight():
+  client.publish("moveRight", 0)
+
+def sendMoveRightBackward():
+  client.publish("moveRightBackward", 0)
+
+def sendMoveRightMotor():
+  client.publish("moveRightMotor", 0)
+
+def sendMoveStop():
+  client.publish("moveStop", 0)
+
+def sendMoveWiggle():
+  client.publish("moveWiggle", 0)
 
 client.loop_forever()
