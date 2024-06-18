@@ -1,20 +1,10 @@
-#!/usr/bin/env pybricks-micropython
-from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import Motor
-from pybricks.parameters import Port
+#!/usr/bin/env python3
+from ev3dev.auto import *
 
-#Speed variable
-speed = 0
-
-#Initialise brick
-ev3 = EV3Brick
-
-#Initialize motors
-left_motor = Motor(Port.A)
-right_motor = Motor(Port.B)
+left = LargeMotor(OUTPUT_A)
+right = LargeMotor(OUTPUT_B)
 
 def move_stop():
-    left_motor.run(speed)
-    right_motor.run(speed)
-
-move_stop()
+    left_motor.stop()
+    right_motor.stop()
+    break

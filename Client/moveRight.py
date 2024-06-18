@@ -15,7 +15,7 @@ right_motor = Motor(OUTPUT_B)
 gyro_sensor = GyroSensor(INPUT_1)
 gyro_sensor.mode = 'GYRO-ANG'
 
-def move_left():
+def move_right():
     # Reset the gyro sensor to 0 degrees
     gyro_sensor.mode = 'GYRO-RATE'  # Temporarily switch to rate mode to reset the sensor
     gyro_sensor.mode = 'GYRO-ANG'  # Switch back to angle mode
@@ -45,5 +45,3 @@ def move_left():
             left_motor.stop()
             right_motor.stop()
             break
-
-move_left()

@@ -1,20 +1,13 @@
-#!/usr/bin/env pybricks-micropython
-from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import Motor
-from pybricks.parameters import Port, Direction, Stop
+#!/usr/bin/env python3
+from ev3dev.auto import *
 
-# Variables
-speed = -500
+#Varibles
+speed = 25
 
-# Initialize the EV3 brick
-ev3 = EV3Brick()
+#Initiialize motor
+right = LargeMotor(OUTPUT_B)
 
-# Initialize the motor
-right_motor = Motor(Port.B)
-
-# Define the move_right function
-def move_right_motor():
-    right_motor.run(speed)
-
-# Call the function to move the motor
-move_right_motor()
+#move_left function
+def move_right_backward():
+    right.duty_cycle_sp=-speed
+    right.run_direct()

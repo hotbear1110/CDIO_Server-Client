@@ -45,5 +45,3 @@ def move_left():
             left_motor.stop()
             right_motor.stop()
             break
-
-move_left()
