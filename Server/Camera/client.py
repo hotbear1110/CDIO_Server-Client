@@ -7,6 +7,7 @@ import heapq
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def draw_graph(graph, path=None):
@@ -17,16 +18,27 @@ def draw_graph(graph, path=None):
             G.add_edge((node.x, node.y), (neighbor.x, neighbor.y), weight=cost)
 
     pos = {(node.x, node.y): (node.x, node.y) for node in graph.nodes.values()}
-    edge_labels = {((node.x, node.y), (neighbor.x, neighbor.y)): cost for node in graph.nodes.values() for
-                   neighbor, cost in node.neighbors.items()}
-
-    nx.draw(G, pos, with_labels=True)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
     if path is not None:
         print('Path in draw_graph:', path)
         path_edges = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
         nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color='r', width=2)
+
+    # Format the labels of the nodes to remove trailing zeros
+    labels = {node: f"({node[0]:g}, {node[1]:g})" for node in pos.keys()}
+
+    nx.draw(G, pos, labels=labels)
+    edge_labels = {((node.x, node.y), (neighbor.x, neighbor.y)): cost for node in graph.nodes.values() for
+                   neighbor, cost in node.neighbors.items()}
+
+    # Create a new dictionary that only includes one label for each pair of nodes
+    single_edge_labels = {}
+    for (node1, node2), cost in edge_labels.items():
+        if (node2, node1) not in single_edge_labels:
+            # Format the cost as a float, but remove trailing zeros
+            single_edge_labels[(node1, node2)] = "{:g}".format(cost)
+
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=single_edge_labels, label_pos=0.5, font_color='black', font_size=12, clip_on=False)
 
     plt.show()
 
@@ -67,53 +79,63 @@ class Node:
 class Graph:
     def __init__(self):
         self.nodes = {}
-
+        self.obstacles = []
+    def add_obstacle(self, obstacle):
+        self.obstacles.append(obstacle)
     def add_node(self, x, y):
         node = Node(x, y)
         self.nodes[(x, y)] = node
         return node
+    def line_of_sight(self, node1, node2):
+        # Generate points on the line between node1 and node2
+        x_values = np.linspace(node1.x, node2.x, num=100)
+        y_values = np.linspace(node1.y, node2.y, num=100)
+        points = zip(x_values, y_values)
 
-    def add_edge(self, point1, point2):
-        if point1 not in self.nodes:
-            self.add_node(*point1)
-        if point2 not in self.nodes:
-            self.add_node(*point2)
+        # Check if any point on the line is within an obstacle
+        for x, y in points:
+            if self.is_node_in_obstacle(Node(x, y)):
+                return False  # Return False if any point on the line is within an obstacle
 
-        # Calculate the Euclidean distance between the two points
-        cost = round(math.sqrt((point2[0] - point1[0]) ** 2 + (point2[1] - point1[1]) ** 2), 2)
+        return True  # Return True if no point on the line is within an obstacle
+    def add_edge(self, node1, node2):
+        # Only add the edge if there is line of sight between the nodes
+        if node1 != node2 and self.line_of_sight(node1, node2):
+            # Calculate the Euclidean distance between the two points
+            cost = round(math.sqrt((node2.x - node1.x) ** 2 + (node2.y - node1.y) ** 2), 2)
 
-        self.nodes[point1].add_neighbor(self.nodes[point2], cost)
-        self.nodes[point2].add_neighbor(self.nodes[point1], cost)
+            node1.add_neighbor(node2, cost)
+            node2.add_neighbor(node1, cost)
 
-    def update_edges(self, current_goal):
+    def update_edges(self, current_goal, robot):
         for node in self.nodes.values():
-            self.add_edge((node.x, node.y), (current_goal.x, current_goal.y))
-            self.add_edge((node.x, node.y), (robot.x, robot.y))
-
+            self.add_edge(node, current_goal)
+            self.add_edge(node, robot)
     def init_vis(self, obstacle, current_goal):
 
-        # offset = (obstacle[0][0] + obstacle[1][0]) / 2 # Half of box length.
-        offset = 1
-        # robot = camera.grid.getRobot()
-        # robot_node = self.nodes[robot]
-        # goal_node = self.nodes[goal]
+        print("look here")
+        self.add_obstacle(obstacle)
+        print(obstacle)
+        print(self.obstacles)
 
-        x1 = obstacle[0][0]
-        y1 = obstacle[0][1]
-        x2 = obstacle[1][0]
-        y2 = obstacle[1][1]
+        x1, y1 = obstacle[0]
+        x2, y2 = obstacle[1]
+        offset = (x2-x1)/2
+
 
         # Create nodes at each corner of the obstacle
-        self.add_node(x1 - offset, y1 + offset)
-        self.add_node(x2 + offset, y1 + offset)
-        self.add_node(x1 - offset, y2 - offset)
-        self.add_node(x2 + offset, y2 - offset)
+        node1 = self.add_node(x1 - offset, y1 + offset)
+        node2 = self.add_node(x2 + offset, y1 + offset)
+        node3 = self.add_node(x1 - offset, y2 - offset)
+        node4 = self.add_node(x2 + offset, y2 - offset)
 
         # Add edges from each corner to the current goal
-        self.add_edge((x1 - offset, y1 + offset), (current_goal.x, current_goal.y))
-        self.add_edge((x2 + offset, y1 + offset), (current_goal.x, current_goal.y))
-        self.add_edge((x1 - offset, y2 - offset), (current_goal.x, current_goal.y))
-        self.add_edge((x2 + offset, y2 - offset), (current_goal.x, current_goal.y))
+        self.add_edge(node1, current_goal)
+        self.add_edge(node2, current_goal)
+        self.add_edge(node3, current_goal)
+        self.add_edge(node4, current_goal)
+
+
 
     def debug_print_nodes(self):
         for (x, y), node in self.nodes.items():
@@ -121,9 +143,21 @@ class Graph:
             for neighbor, cost in node.neighbors.items():
                 print(f'  Neighbor at ({neighbor.x}, {neighbor.y}) with cost {cost}')
 
+    def is_node_in_obstacle(self, node):
+        for obstacle in self.obstacles:
+            (x1, y1), (x2, y2) = obstacle
+            print(f"Checking node at ({node.x}, {node.y}) against obstacle at (({x1}, {y1}), ({x2}, {y2}))")
+            if x1 <= node.x <= x2 and y2 <= node.y <= y1:
+                print("Node is in obstacle")
+                return True
+        print("false")
+        return False
+
+
 
 def algo():
     global robot
+    global grid
 
     start = 1
     graph = Graph()
@@ -158,44 +192,29 @@ def algo():
 
         return distances, path
 
-    global grid
-
-    # print(grid.obstacle)
-    # robot = camera.grid.getRobot()
-    # oball = camera.grid.getOball()
-    # goal = camera.grid.getGoalSmall()
-    goal = camera.grid.getMidpoint([(5, 10), (6, 10)])
-    oball = camera.grid.getMidpoint([(12, 5), (12, 5)])
-    graph.add_node(oball[0], oball[1])
-    graph.add_node(robot[0], robot[1])
-    graph.add_node(goal[0], goal[1])
-
-    camera.grid.obstacle = [(3, 4), (5, 2)]
-
+    # Initialize the graph with nodes for important objects.
+    obstacle = [(3, 4), (5, 2)]
+    robot = graph.add_node(*camera.grid.getMidpoint([(0, 0), (0, 0)]))
+    goal = graph.add_node(*camera.grid.getMidpoint([(5, 10), (6, 10)]))
+    oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
 
     # Initialize the four nodes around the obstacle
-    current_goal = graph.nodes[goal]  # Replace with the actual current goal
-
-    graph.init_vis(camera.grid.obstacle,current_goal)
-    graph.update_edges(robot)
+    current_goal = graph.nodes[(oball.x, oball.y)]  # Replace with the actual current goal
+    graph.init_vis(obstacle, goal)
+    graph.update_edges(robot, oball)
     # Update the edges based on the current goal
-
-    # graph.add_node(current_goal[0], current_goal[1])
-
-
-    obstacle = camera.grid.getObstacle()
-    print(camera.grid.getMidpoint(obstacle))
-
     graph.add_edge(robot, oball)
     graph.add_edge(goal, oball)
 
-    # Display graph.
-    distances, path = shortest(graph, graph.nodes[robot], current_goal)
+    # Display graph graphically
+    distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     draw_graph(graph, path)
 
+    # graph.debug_print_nodes() # Print the nodes and their neighbors
     graph.debug_print_nodes()
 
-    print(shortest(graph, graph.nodes[robot], current_goal))
+    # prints shortest path from robot to current goal
+    print(shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal))
 
     # print(camera.grid.obstacle)
 
