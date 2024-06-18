@@ -79,6 +79,10 @@ class Grid:
     
     def getObstacle(self):
         return self.obstacle
+    def getMidpoint(self, obstacle):
+        midpoint_x = (obstacle[0][0] + obstacle[1][0]) / 2
+        midpoint_y = (obstacle[0][1] + obstacle[1][1]) / 2
+        return (midpoint_x, midpoint_y)
     
     def getOball(self):
         return self.oBall
@@ -277,7 +281,7 @@ def runLowPerformanceModel(cap):
     for x in os.listdir():
         if x.startswith("model_"):
             models.append(x)
-            print(i, ': ', x)
+            # print(i, ': ', x)
             i = i + 1
 
     model_number = input()
