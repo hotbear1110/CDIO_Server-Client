@@ -5,7 +5,8 @@ from pybricks.parameters import Port, Stop
 from pybricks.tools import wait
 
 # Variables
-speed = -500
+speedright = -800
+speedleft = 800
 
 # Initialize brick
 ev3 = EV3Brick()
@@ -17,9 +18,11 @@ right_motor = Motor(Port.B)
 # move_wiggle function
 def move_wiggle():
     for i in range(4):  # repeats 4 times
-        left_motor.run_time(speed, 200, then=Stop.COAST, wait=True)
+        left_motor.run_time(speed, 800, then=Stop.COAST, wait=True)
+        right_motor.run_time(speed, 800, then=Stop.COAST, wait=True)
         wait(500)
-        right_motor.run_time(speed, 200, then=Stop.COAST, wait=True)
+        right_motor.run_time(speed, 800, then=Stop.COAST, wait=True)
+        left_motor.run_time(speed, 800, then=Stop.COAST, wait=True)
         wait(500)
 
 move_wiggle()

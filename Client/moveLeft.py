@@ -25,7 +25,7 @@ gyro_sensor.reset_angle(0)
 
 # Define the move_left function
 def move_left():
-    # Start the motors in reverse
+    # Start the motors
     right_motor.run(speedright)
     left_motor.run(speedleft)
 
