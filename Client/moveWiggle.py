@@ -7,7 +7,7 @@ left_motor = LargeMotor(OUTPUT_A)
 right_motor = LargeMotor(OUTPUT_B)
 
 # Variables
-speed = 80 
+speed = payload 
 
 # move_wiggle function
 def move_wiggle():

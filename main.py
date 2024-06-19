@@ -44,29 +44,29 @@ def on_message(client, userdata, msg):
     msg.payload = msg.payload.decode("utf-8")
     print(msg.topic)
     if msg.topic == "moveBackward":
-        Client.moveBackward.move_backward()
+        Client.moveBackward.move_backward(msg.payload)
     elif msg.topic == "moveForward":
-        Client.moveForward.move_forward()
+        Client.moveForward.move_forward(msg.payload)
     elif msg.topic == "moveLeft":
-        Client.moveLeft.move_left()
+        Client.moveLeft.move_left(msg.payload)
     elif msg.topic == "moveLeftBackward":
-        Client.moveLeftBackward.move_left_backward()
+        Client.moveLeftBackward.move_left_backward(msg.payload)
     elif msg.topic == "moveLeftMotor":
-        Client.moveLeftMotor.move_left_motor()
+        Client.moveLeftMotor.move_left_motor(msg.payload)
     elif msg.topic == "moveRight":
-        Client.moveRight.move_right()
+        Client.moveRight.move_right(msg.payload)
     elif msg.topic == "moveRightBackward":
-        Client.moveRightBackward.move_right_backward()
+        Client.moveRightBackward.move_right_backward(msg.payload)
     elif msg.topic == "moveRightMotor":
-        Client.moveRightMotor.move_right_motor()
+        Client.moveRightMotor.move_right_motor(msg.payload)
     elif msg.topic == "moveStop":
-        Client.moveStop.move_stop()
+        Client.moveStop.move_stop(msg.payload)
     elif msg.topic == "moveWiggle":
-        Client.moveWiggle.move_wiggle()
+        Client.moveWiggle.move_wiggle(msg.payload)
     elif msg.topic == "spinForward":
-        Client.ballCage.spin_forward()
+        Client.ballCage.spin_forward(msg.payload)
     elif msg.topic == "spinBackward":
-        Client.ballCage.spin_backward()
+        Client.ballCage.spin_backward(msg.payload)
 client = mqtt.Client("Subscriber")
 client.connect("localhost",1883,60)
 

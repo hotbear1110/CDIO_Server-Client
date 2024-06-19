@@ -2,7 +2,7 @@
 from ev3dev.auto import *
 
 #Varibles
-speed = 25
+speed = payload
 
 #Initiialize motor
 right = LargeMotor(OUTPUT_B)

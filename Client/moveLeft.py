@@ -6,7 +6,7 @@ speedright = -25  # Adjusted motor speeds for turning right
 speedleft = 25
 slow_speedright = -16  # Slower speed for fine-tuning the turn
 slow_speedleft = 16
-target_angle = -90  # Target angle to turn right
+target_angle = payload  # Target angle to turn right
 slowdown_threshold = 45  # Angle threshold to start slowing down
 
 # Initialize the motors and gyro sensor
