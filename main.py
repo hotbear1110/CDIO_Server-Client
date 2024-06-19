@@ -20,13 +20,7 @@ spkr = Sound()
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    spkr.play_song((
-    ('D4', 'e3'),
-    ('D4', 'e3'),
-    ('D4', 'e3'),
-    ('G4', 'h'),
-    ('D5', 'h')
-))
+
     client.subscribe("moveBackward")
     client.subscribe("moveForward")
     client.subscribe("moveLeft")
@@ -39,6 +33,8 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("moveWiggle")
     client.subscribe("spinForward")
     client.subscribe("spinBackward")
+
+    spkr.play_file('startup.wav')
        
 def on_message(client, userdata, msg):
     msg.payload = msg.payload.decode("utf-8")
