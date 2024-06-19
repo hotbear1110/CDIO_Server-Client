@@ -2,6 +2,8 @@
 
 import paho.mqtt.client as mqtt
 import time
+import random
+# import Server.server
 import camera
 import heapq
 import math
@@ -38,7 +40,8 @@ def draw_graph(graph, path=None):
             # Format the cost as a float, but remove trailing zeros
             single_edge_labels[(node1, node2)] = "{:g}".format(cost)
 
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=single_edge_labels, label_pos=0.5, font_color='black', font_size=12, clip_on=False)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=single_edge_labels, label_pos=0.5, font_color='black',
+                                 font_size=12, clip_on=False)
 
     plt.show()
 
@@ -79,13 +82,17 @@ class Node:
 class Graph:
     def __init__(self):
         self.nodes = {}
+        self.balls = []  # List to store ball nodes
         self.obstacles = []
+
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
+
     def add_node(self, x, y):
         node = Node(x, y)
         self.nodes[(x, y)] = node
         return node
+
     def line_of_sight(self, node1, node2):
         # Generate points on the line between node1 and node2
         x_values = np.linspace(node1.x, node2.x, num=100)
@@ -98,6 +105,7 @@ class Graph:
                 return False  # Return False if any point on the line is within an obstacle
 
         return True  # Return True if no point on the line is within an obstacle
+
     def add_edge(self, node1, node2):
         # Only add the edge if there is line of sight between the nodes
         if node1 != node2 and self.line_of_sight(node1, node2):
@@ -111,6 +119,7 @@ class Graph:
         for node in self.nodes.values():
             self.add_edge(node, current_goal)
             self.add_edge(node, robot)
+
     def init_vis(self, obstacle, current_goal):
 
         print("look here")
@@ -120,8 +129,7 @@ class Graph:
 
         x1, y1 = obstacle[0]
         x2, y2 = obstacle[1]
-        offset = (x2-x1)/2
-
+        offset = (x2 - x1) / 2
 
         # Create nodes at each corner of the obstacle
         node1 = self.add_node(x1 - offset, y1 + offset)
@@ -135,8 +143,6 @@ class Graph:
         self.add_edge(node3, current_goal)
         self.add_edge(node4, current_goal)
 
-
-
     def debug_print_nodes(self):
         for (x, y), node in self.nodes.items():
             print(f'Node at ({x}, {y}):')
@@ -146,14 +152,64 @@ class Graph:
     def is_node_in_obstacle(self, node):
         for obstacle in self.obstacles:
             (x1, y1), (x2, y2) = obstacle
-            print(f"Checking node at ({node.x}, {node.y}) against obstacle at (({x1}, {y1}), ({x2}, {y2}))")
+            # Test to check line of sight.
+            # print(f"Checking node at ({node.x}, {node.y}) against obstacle at (({x1}, {y1}), ({x2}, {y2}))")
             if x1 <= node.x <= x2 and y2 <= node.y <= y1:
                 print("Node is in obstacle")
                 return True
-        print("false")
         return False
 
+    def add_balls(self, num_nodes):
+        for _ in range(num_nodes):
+            x = 11
+            y = 8
+            # x = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for x
+            # y = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for y
+            node = Node(x, y)
+            self.nodes[(x, y)] = node
+            self.balls.append(node)  # Add the new node to the balls list
 
+
+class Logic:
+    # Attempt at aligning robot without color sensor.
+    # At the start, put the robot so it lines up with the wall as much as possible.
+    def allign(self):
+        prev_x, prev_y = grid.camera.getRobot()
+        Server.server.sendMoveForward(50)
+        moving = True
+        iteration = 1
+        xiteration = 1
+        while moving:
+            robot.x, robot.y = grid.camera.getRobot()
+            if abs(robot.x - prev_x) == 1 and robot.y == prev_y:
+                print("Robot has moved one tile horizontally.")
+                # We are at a spot we can measure. Note the degrees of the gyro.
+                # TODO: Adjust how many tiles is good enough for it to be going straight.
+                xiteration = xiteration + 1
+
+                if xiteration == 3:
+                    # TODO: Reset gyro so its 0 when its alligned.
+                    moving = False
+                    # Server.server.sendMoveStop()
+
+
+            elif abs(robot.y - prev_y) == 1 and robot.x == prev_x:
+                print("Robot has moved one tile vertically.")
+                if robot.y - prev_y > 0:  # Robot has moved up
+                    # TODO: Please make the commands take a parameter as degrees to turn or move forward speed.
+                    # Server.server.sendMoveRight(5 / iteration)  # Turn right to go back to the tile.
+                    # Each time it loops, the iteration is bigger and the amount it turns is divided by this amount.
+                    # 5 can be whatever turn we want.
+                    # Server.server.sendMoveForward(10)  # Slows down.
+                    iteration = iteration + 1
+                    if iteration == 5:
+                        moving = False
+                else:  # Robot has moved down
+                    # Server.server.sendMoveLeft(5 / iteration)  # Turn left to go back to the tile.
+                    # Server.server.sendMoveForward(10)  # Slows down.
+                    iteration = iteration + 1
+                    if iteration == 5:
+                        moving = False
 
 def algo():
     global robot
@@ -178,6 +234,10 @@ def algo():
                     shortest_path[neighbor] = current
                     heapq.heappush(queue, (new_cost, neighbor))
 
+        # Ensure end_node is in distances dictionary
+        if end_node not in distances:
+            distances[end_node] = float('infinity')
+
         # Reconstruct the shortest path
         path = []
         while end_node is not None:
@@ -185,18 +245,17 @@ def algo():
             end_node = shortest_path.get(end_node)
         path.reverse()
 
-        # Print shortest path
-        print('Shortest path:')
-        for node in path:
-            print(node)
-
         return distances, path
+
+    #Hard coded testing stuff.
 
     # Initialize the graph with nodes for important objects.
     obstacle = [(3, 4), (5, 2)]
     robot = graph.add_node(*camera.grid.getMidpoint([(0, 0), (0, 0)]))
     goal = graph.add_node(*camera.grid.getMidpoint([(5, 10), (6, 10)]))
     oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
+    # oball = graph.add_node(*camera.grid.getMidpoint([camera.grid.getGoalSmall(), camera.grid.getGoalSmall()]))
+
 
     # Initialize the four nodes around the obstacle
     current_goal = graph.nodes[(oball.x, oball.y)]  # Replace with the actual current goal
@@ -215,6 +274,37 @@ def algo():
 
     # prints shortest path from robot to current goal
     print(shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal))
+
+    # Logic.allign()
+    # First goal node.
+    current_goal = graph.nodes[(oball.x, oball.y)]
+
+    # TODO: Turn and drive towards said path.
+    # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
+    # draw_graph(graph, path)
+
+    # Second goal node.
+    graph.add_balls(1)
+    robot = oball
+    min_distance = float('inf')
+    for node in graph.balls:  # Iterate over ball nodes only
+        # Calculate the shortest distance from the robot to the node
+        distances, _ = shortest(graph, graph.nodes[(robot.x, robot.y)], node)
+
+        # If the calculated distance is less than min_distance, update min_distance and closest_node
+        if distances[node] < min_distance:
+            min_distance = distances[node]
+            current_goal = node
+
+    # closest_node is now the closest node to the robot among the randomly generated nodes
+    # Pass closest_node to graph.update_edges
+
+    graph.update_edges(current_goal, robot)
+
+    distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
+    draw_graph(graph, path)
+
+
 
     # print(camera.grid.obstacle)
 

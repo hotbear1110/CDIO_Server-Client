@@ -8,34 +8,35 @@ MQTT_Broker = '192.168.94.34'
 client = mqtt.Client("publisher")
 client.connect(MQTT_Broker,1883,60)
 
-def sendMoveForward():
-  client.publish("moveForward", 0)
+def sendMoveForward(payload=0):
+  client.publish("moveForward", payload)
 
-def sendMoveBackward():
-  client.publish("moveBackward", 0)
+def sendMoveBackward(payload=0):
+  client.publish("moveBackward", payload)
 
-def sendMoveLeft():
-  client.publish("moveLeft", 0)
+def sendMoveLeft(payload=0):
+  client.publish("moveLeft", payload)
 
-def sendMoveLeftBackward():
-  client.publish("moveLeftBackward", 0)
+def sendMoveLeftBackward(payload=0):
+  client.publish("moveLeftBackward", payload)
 
-def sendMoveLeftMotor():
-  client.publish("moveLeftMotor", 0)
+def sendMoveLeftMotor(payload=0):
+  client.publish("moveLeftMotor", payload)
 
-def sendMoveRight():
-  client.publish("moveRight", 0)
+def sendMoveRight(payload=0):
+  client.publish("moveRight", payload)
 
-def sendMoveRightBackward():
-  client.publish("moveRightBackward", 0)
+def sendMoveRightBackward(payload=0):
+  client.publish("moveRightBackward", payload)
 
-def sendMoveRightMotor():
-  client.publish("moveRightMotor", 0)
+def sendMoveRightMotor(payload=0):
+  client.publish("moveRightMotor", payload)
 
-def sendMoveStop():
-  client.publish("moveStop", 0)
+def sendMoveStop(payload=0):
+  client.publish("moveStop", payload)
 
-def sendMoveWiggle():
-  client.publish("moveWiggle", 0)
+def sendMoveWiggle(payload=0):
+  client.publish("moveWiggle", payload)
+
 
 client.loop_forever()
