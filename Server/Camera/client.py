@@ -277,7 +277,7 @@ def algo():
 
     # Logic.allign()
     # First goal node.
-    current_goal = graph.nodes[(oball.x, oball.y)]
+    # current_goal = graph.nodes[(oball.x, oball.y)]
 
     # TODO: Turn and drive towards said path.
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
@@ -285,7 +285,7 @@ def algo():
 
     # Second goal node.
     graph.add_balls(1)
-    robot = oball
+
     min_distance = float('inf')
     for node in graph.balls:  # Iterate over ball nodes only
         # Calculate the shortest distance from the robot to the node
@@ -299,7 +299,8 @@ def algo():
     # closest_node is now the closest node to the robot among the randomly generated nodes
     # Pass closest_node to graph.update_edges
 
-    graph.update_edges(current_goal, robot)
+
+    graph.update_edges(current_goal, oball)
 
     distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     draw_graph(graph, path)

@@ -125,7 +125,10 @@ class Grid:
                 elif name == "Obstacle":
                     self.obstacle = ((position[0], position[1]))
 
-                if (name != "Wall" or self.boxes[position[0]][position[1]].getName() == "") and (self.boxes[position[0]][position[1]].getName() != "Egg"): 
+                if (name != "Wall" or self.boxes[position[0]][position[1]].getName() == "") and (self.boxes[position[0]][position[1]].getName() != "Egg"):
+                    if(name)=="Obstacle":
+                        obstacle=[]
+
 
                     self.boxes[position[0]][position[1]].updateName(name)
 
