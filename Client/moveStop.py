@@ -5,6 +5,8 @@ left = LargeMotor(OUTPUT_A)
 right = LargeMotor(OUTPUT_B)
 
 def move_stop():
-    left_motor.stop()
-    right_motor.stop()
-    break
+    left.duty_cycle_sp=0
+    right.duty_cycle_sp=0
+
+    left.run_direct()
+    right.run_direct()

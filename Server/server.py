@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 import paho.mqtt.client as mqtt
-import time
 
-MQTT_Broker = '192.168.94.34'
+MQTT_Broker = '192.168.125.34'
 
 client = mqtt.Client("publisher")
 client.connect(MQTT_Broker,1883,60)
@@ -39,4 +38,10 @@ def sendMoveWiggle(payload=0):
   client.publish("moveWiggle", payload)
 
 
-client.loop_forever()
+def sendSpinForward(payload=0):
+  client.publish("spinForward", payload)
+
+def sendSpinBackward(payload=0):
+  client.publish("spinBackward", payload)
+
+#client.loop_forever()
