@@ -122,7 +122,7 @@ class Graph:
 
     def init_vis(self, obstacle, current_goal):
 
-        print("look here")
+        # print("look here")
         self.add_obstacle(obstacle)
         print(obstacle)
         print(self.obstacles)
@@ -284,58 +284,43 @@ def algo():
     # draw_graph(graph, path)
 
     # Second goal node.
-    graph.add_balls(1)
-
-    min_distance = float('inf')
-    for node in graph.balls:  # Iterate over ball nodes only
-        # Calculate the shortest distance from the robot to the node
-        distances, _ = shortest(graph, graph.nodes[(robot.x, robot.y)], node)
-
-        # If the calculated distance is less than min_distance, update min_distance and closest_node
-        if distances[node] < min_distance:
-            min_distance = distances[node]
-            current_goal = node
-
-    # closest_node is now the closest node to the robot among the randomly generated nodes
-    # Pass closest_node to graph.update_edges
-
-
-    graph.update_edges(current_goal, oball)
-
-    distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
+    robot = oball
+    current_goal = goal
+    graph.update_edges(current_goal, robot)
+    distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
 
 
 
-    # print(camera.grid.obstacle)
+    #Third goal node.
+    graph.add_balls(1)
+    robot = goal
 
-    # while True:
-    #     for y in range(len(camera.grid.boxes[0])):
-    #         for x in range(len(camera.grid.boxes)):
-    #             if camera.grid.boxes[x][y].getName() == "WBall":
-    #                print("W", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "OBall":
-    #                 print("O", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "Egg":
-    #                 print("E", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "robot":
-    #                 print("R", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "robotFront":
-    #                 print("F", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "robotBack":
-    #                 print("B", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "Goal-Small-":
-    #                 print("S", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "Goal-Large-":
-    #                 print("G", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "Obstacle":
-    #                 print("|", end=" ")
-    #             elif camera.grid.boxes[x][y].getName() == "Wall":
-    #                 print("|", end=" ")
-    #             else:
-    #                 print(" ", end=" ")
-    #         print("")
-    #     time.sleep(1)
+    min_distance = float('inf')
+    for node in graph.balls:  # Iterate over ball nodes only
+        print("look here 1")
+        # Calculate the shortest distance from the robot to the node
+        graph.update_edges(current_goal, robot)
+        distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
+
+        # If the calculated distance is less than min_distance, update min_distance and closest_node
+        if distances[node] < min_distance:
+            min_distance = distances[node]
+            print("look here 2")
+            print(current_goal)
+            print(node)
+            current_goal = node
+
+    # closest_node is now the closest node to the robot among the randomly generated nodes
+    # Pass closest_node to graph.update_edges
+    graph.update_edges(current_goal, robot)
+    distances, path = shortest(graph, robot, current_goal)
+    draw_graph(graph, path)
+    # graph.update_edges(current_goal, robot)
+
+    # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
+    # draw_graph(graph, path)
+
 
 #Config location is:
 #/etc/mosquitto/conf.d
