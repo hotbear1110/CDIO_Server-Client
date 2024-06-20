@@ -169,9 +169,9 @@ def getGrid():
 def runModel(cap):
     global grid
 
-    grid = Grid(cap.get(3), cap.get(4), 10)
+    grid = Grid(cap.get(3), cap.get(4), 5)
 
-    tmp_grid = Grid(cap.get(3), cap.get(4), 10)
+    tmp_grid = Grid(cap.get(3), cap.get(4), 5)
 
     print('Choose a model:')
 
@@ -271,7 +271,7 @@ def runModel(cap):
 def runLowPerformanceModel(cap):
     global grid
 
-    grid = Grid(cap.get(3), cap.get(4), 25)
+    grid = Grid(cap.get(3), cap.get(4), 10)
 
     tmp_grid = Grid(cap.get(3), cap.get(4), 10)
 

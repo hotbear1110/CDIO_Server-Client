@@ -1,18 +1,58 @@
-#!/usr/bin/env pybricks-micropython
-# imports
-#from moveBackward import *
-#from moveForward import *
-#from moveLeft import *
-from moveRight import *
-#from moveStop import *
-#from moveWiggle import *
-#from moveRightBackward import *
-#from moveLeftBackward import *
+#!/usr/bin/env python3
+
+from moveForward import *
+from moveBackward import *
 from ballCage import *
+from moveRight import *
+from moveLeft import *
+from moveStop import *
+import time
 
-# calling functions
 
-move_right
+spin_forward()
+move_forward(50)
 
+time.sleep(3)
+move_stop()
 
+time.sleep(2)
+move_forward(50)
 
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_forward(50)
+
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_forward(50)
+
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_backward(50)
+
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_backward(50)
+
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_backward(50)
+
+time.sleep(3)
+move_stop()
+
+time.sleep(2)
+move_backward(50)
+
+time.sleep(3)
+move_stop()

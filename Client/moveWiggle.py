@@ -7,10 +7,10 @@ left_motor = LargeMotor(OUTPUT_A)
 right_motor = LargeMotor(OUTPUT_B)
 
 # Variables
-speed = payload 
 
 # move_wiggle function
-def move_wiggle():
+def move_wiggle(payload):
+    speed = payload 
     for i in range(4):  # repeats 4 times
         left_motor.run_timed(speed_sp=speed, time_sp=800, stop_action="coast")
         right_motor.run_timed(speed_sp=-speed, time_sp=800, stop_action="coast")
