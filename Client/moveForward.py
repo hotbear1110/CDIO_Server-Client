@@ -4,9 +4,9 @@ from ev3dev.auto import *
 left = LargeMotor(OUTPUT_A)
 right = LargeMotor(OUTPUT_B)
 
-def move_forward():
-    left.duty_cycle_sp=payload
-    right.duty_cycle_sp=payload
+def move_forward(payload):
+    left.duty_cycle_sp=-payload
+    right.duty_cycle_sp=-payload
 
     left.run_direct()
     right.run_direct()

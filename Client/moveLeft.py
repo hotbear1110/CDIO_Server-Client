@@ -6,7 +6,6 @@ speedright = -25  # Adjusted motor speeds for turning right
 speedleft = 25
 slow_speedright = -16  # Slower speed for fine-tuning the turn
 slow_speedleft = 16
-target_angle = payload  # Target angle to turn right
 slowdown_threshold = 45  # Angle threshold to start slowing down
 
 # Initialize the motors and gyro sensor
@@ -15,10 +14,12 @@ right_motor = Motor(OUTPUT_B)
 gyro_sensor = GyroSensor(INPUT_1)
 gyro_sensor.mode = 'GYRO-ANG'
 
-def move_left():
+def move_left(payload):
     # Reset the gyro sensor to 0 degrees
     gyro_sensor.mode = 'GYRO-RATE'  # Temporarily switch to rate mode to reset the sensor
     gyro_sensor.mode = 'GYRO-ANG'  # Switch back to angle mode
+
+    target_angle = -payload  # Target angle to turn right
 
     # Start the motors
     left_motor.run_direct()
