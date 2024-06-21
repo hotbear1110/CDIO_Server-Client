@@ -279,7 +279,7 @@ def algo():
     # First goal node.
     # current_goal = graph.nodes[(oball.x, oball.y)]
     
-    def turn_and_drive_towards_node(self, current_goal)
+    def turn_and_drive_towards_node(self, current_goal):
 
         #calculation of direction vector
         direction_x = current_goal.x - self.robot.x
@@ -292,7 +292,7 @@ def algo():
         # Move forward next point
         while robot.x - target_angle.x != 0 and robot.y - target_angle.y != 0:
             Server.sendMoveForward(30)
-            if robot.x - target_angle.x = 0 and robot.y - target_angle.y = 0:
+            if robot.x - target_angle.x == 0 and robot.y - target_angle.y == 0:
                 Server.sendMoveStop()
 
         # Updating the robots coordinates

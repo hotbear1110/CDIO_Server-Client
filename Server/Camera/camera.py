@@ -92,9 +92,9 @@ class Grid:
         if ((egg_x2 > obstacle_x1) and (egg_x1 < obstacle_x2)) and ((egg_y2 > obstacle_y1) and (egg_y1 < obstacle_y2)):
             #if egg in the x middel
             if (egg_x1 < (obstacle_x2 - obstacle_width/2)) and (egg_x2 > (obstacle_x2 - obstacle_width/2)):
-                cross1 = (obstacle_x1 + obstacle_width/2, obstacle_y1, obstacle_x2 - obstacle_width/2, obstacle_y2)
-                
-                cross2 = (obstacle_x1, obstacle_y1 + obstacle_height/2, obstacle_x2, obstacle_y2 - obstacle_height/2)
+                cross1 = self.obstacle
+
+                cross2 = (obstacle_x2, obstacle_y1, obstacle_x1, obstacle_y2)
             else:
                 #if egg is in the y middle
                 if (egg_y1 < (obstacle_y2 - obstacle_height/2)) and (egg_y2 > (obstacle_y2 - obstacle_height/2)):
@@ -287,6 +287,16 @@ def runModel(cap):
                     rgb = [0, 255, 0]
 
                 drawInGrid(img, x1, y1, x2, y2, rgb)
+                
+            obstacle = grid.getObstacle()
+
+            cross1_x1, cross1_y1, cross1_x2, cross1_y2 = obstacle[0]
+            cross2_x1, cross2_y1, cross2_x2, cross2_y2 = obstacle[1]
+
+            print(cross1_x1, cross1_y1, cross1_x2, cross1_y2)
+            
+            cv2.line(img, (round(cross1_x1), round(cross1_y1)), (round(cross1_x2), round(cross1_y2)), (0, 255, 0), thickness=3, lineType=8)
+            cv2.line(img, (round(cross2_x1), round(cross2_y1)), (round(cross2_x2), round(cross2_y2)), (0, 255, 0), thickness=3, lineType=8)
 
         cv2.imshow('Webcam', img)
         if cv2.waitKey(1) == ord('q'):
