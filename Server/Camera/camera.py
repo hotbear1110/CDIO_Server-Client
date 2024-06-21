@@ -94,14 +94,18 @@ class Grid:
         if ((egg_x2 > obstacle_x1) and (egg_x1 < obstacle_x2)) and ((egg_y2 > obstacle_y1) and (egg_y1 < obstacle_y2)):
             #if egg in the x middel
             if (egg_x1 < ((obstacle_x2 - obstacle_width/2)-obstacle_width/20)) and (egg_x2 > ((obstacle_x2 - obstacle_width/2)+obstacle_width/20)):
-                x1, y1, x2, y2 = self.obstacle
+                x1, y1 = self.obstacle[0]
+                x2, y2 = self.obstacle[1]
+
                 cross1 = [(x1, y1), (x2, y2)]
 
                 cross2 = [(obstacle_x2, obstacle_y1), (obstacle_x1, obstacle_y2)]
             else:
                 #if egg is in the y middle
                 if (egg_y1 < ((obstacle_y2 - obstacle_height/2)-obstacle_height/20)) and (egg_y2 > ((obstacle_y2 - obstacle_height/2)+obstacle_height/20)):
-                    x1, y1, x2, y2 = self.obstacle
+                    x1, y1 = self.obstacle[0]
+                    x2, y2 = self.obstacle[1]
+
                     cross1 = [(x1, y1), (x2, y2)]
 
                     cross2 = [(obstacle_x2, obstacle_y1), (obstacle_x1, obstacle_y2)]
