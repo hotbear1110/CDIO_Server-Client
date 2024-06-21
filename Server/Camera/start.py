@@ -2,6 +2,7 @@ import cv2
 import os
 from camera import runModel, runLowPerformanceModel
 import threading
+import time
 from client import algo
 
 usr_input = 0

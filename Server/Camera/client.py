@@ -215,7 +215,8 @@ class Logic:
                         moving = False
 
 def algo():
-    time.sleep(10)
+    time.sleep(20)
+
     global robot
     global grid
 
@@ -266,19 +267,19 @@ def algo():
     # Real setters.
     obstacle = camera.grid.getObstacle()
     print("Check here!")
-    print(obstacle)
+    print("Obstacle", obstacle)
     robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
-    print(robot)
+    print("Robot", robot)
     goal = graph.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
-    print (goal)
+    print ("Small goal", goal)
     oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
-    print (oball)
+    print("Oball", oball)
 
     # oball = graph.add_node(*camera.grid.getMidpoint([camera.grid.getGoalSmall(), camera.grid.getGoalSmall()]))
 
 
     # Initialize the four nodes around the obstacle
-    current_goal = oball  # Replace with the actual current goal
+    current_goal = oball # Replace with the actual current goal
     graph.init_vis(obstacle, current_goal)
     graph.update_edges(robot, oball)
     # Update the edges based on the current goal
