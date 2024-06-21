@@ -244,7 +244,7 @@ def runModel(cap):
             for box in boxes:
                 # bounding box
                 x1, y1, x2, y2 = box.xyxy[0]
-                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+                x1, y1, x2, y2 = int(x1), int(cap.get(4) - y1), int(x2), int(cap.get(4) - y2) # convert to int values
 
                 # confidence
                 confidence = math.ceil((box.conf[0]*100))/100
@@ -256,14 +256,14 @@ def runModel(cap):
                 #print("Class name --> ", name)
 
                 # object details
-                org = [x1, y1]
+                org = [x1, int(cap.get(4)-y1)]
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 fontScale = 1
                 color = colors[name]
                 thickness = 2
 
                 # put box in cam
-                cv2.rectangle(img, (x1, y1), (x2, y2), color, 3)
+                cv2.rectangle(img, (x1, int(cap.get(4) - y1)), (x2, int(cap.get(4) - y2)), color, 3)
                 cv2.putText(img, name, org, font, fontScale, (255, 0, 0), thickness)
 
                 positions = tmp_grid.addBox(x1, y1, x2, y2, name)
@@ -297,7 +297,7 @@ def runModel(cap):
                 elif grid.boxes[x][y].name == "robotBack":
                     rgb = [0, 255, 0]
 
-                drawInGrid(img, x1, y1, x2, y2, rgb)
+                drawInGrid(img, x1, int(cap.get(4)-y1), x2, int(cap.get(4)-y2), rgb)
                 
             obstacle = grid.getObstacleCross()
 
