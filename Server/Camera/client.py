@@ -10,6 +10,7 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import Server.server as Server
 
 
 def draw_graph(graph, path=None):
@@ -175,7 +176,7 @@ class Logic:
     # At the start, put the robot so it lines up with the wall as much as possible.
     def allign(self):
         prev_x, prev_y = grid.camera.getRobot()
-        Server.server.sendMoveForward(50)
+        Server.sendMoveForward(50)
         moving = True
         iteration = 1
         xiteration = 1
@@ -255,7 +256,7 @@ def algo():
     # robot = graph.add_node(*camera.grid.getMidpoint([(0, 0), (0, 0)]))
     # goal = graph.add_node(*camera.grid.getMidpoint([(5, 10), (6, 10)]))
     # oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
-    obstacle = camera.grid.getObstacle()
+    obstacle = camera.grid.getObstacle()[0]
     robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobotFront()))
     goal = graph.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
     oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
@@ -284,22 +285,22 @@ def algo():
     # Logic.allign()
     # First goal node.
     # current_goal = graph.nodes[(oball.x, oball.y)]
-    
-    def turn_and_drive_towards_node(self, current_goal):
+    def turn_and_drive_towards_node(current_goal):
 
         #calculation of direction vector
-        direction_x = current_goal.x - self.robot.x
-        direction_y = current_goal.y - self.robot.y
+        direction_x = current_goal.x - robot.x
+        direction_y = current_goal.y - robot.y
 
         # Calculation of angle to turn and turning
         target_angle = math.degrees(math.atan2(direction_y, direction_x))
-        self.send_turn_command(target_angle)
+        algo.send_turn_command(target_angle)
 
         # Move forward next point
         while robot.x - target_angle.x != 0 and robot.y - target_angle.y != 0:
             Server.sendMoveForward(30)
             if robot.x - target_angle.x == 0 and robot.y - target_angle.y == 0:
                 Server.sendMoveStop()
+
 
         # Updating the robots coordinates
         target_angle.x = robot.x
@@ -308,7 +309,7 @@ def algo():
     # TODO: Turn and drive towards said path.
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
-
+    turn_and_drive_towards_node(self, current_goal)
 
 
     # Second goal node.

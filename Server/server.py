@@ -2,7 +2,7 @@
 
 import paho.mqtt.client as mqtt
 
-MQTT_Broker = '192.168.125.34'
+MQTT_Broker = '192.168.5.34'
 
 client = mqtt.Client("publisher")
 client.connect(MQTT_Broker,1883,60)
