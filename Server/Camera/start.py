@@ -60,7 +60,7 @@ while usr_input == 0:
         os.system('cls')
         
         print('loading video...')
-        cap = cv2.VideoCapture("test_video.mp4")
+        cap = cv2.VideoCapture("test_video_2.mp4")
 
         os.system('cls')
 
