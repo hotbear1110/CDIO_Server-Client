@@ -78,8 +78,10 @@ class Grid:
         return self.egg
     
     def getObstacle(self):
-        egg_x1, egg_y1, egg_x2, egg_y2 = self.egg
-        obstacle_x1, obstacle_y1, obstacle_x2, obstacle_y2 = self.obstacle
+        egg_x1, egg_y1 = self.egg[0]
+        egg_x2, egg_y2 = self.egg[1]
+        obstacle_x1, obstacle_y1 = self.obstacle[0]
+        obstacle_x2, obstacle_y2 = self.obstacle[1]
 
         cross1 = [(0, 0), (0, 0)]
         cross2 = [(0, 0), (0, 0)]
