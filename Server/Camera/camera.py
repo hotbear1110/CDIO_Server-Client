@@ -142,23 +142,23 @@ class Grid:
         positions = []
         
         if name == "WBall":
-            self.wBalls.append([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.wBalls.append([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "OBall":
-            self.oBall = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.oBall = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "Egg":
-            self.egg = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.egg = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "robot":
-            self.robot = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.robot = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "robotFront":
-            self.robotFront = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.robotFront = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "robotBack":
-            self.robotBack = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.robotBack = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "Goal-Small-":
-            self.goalSmall = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.goalSmall = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "Goal-Large-":
-            self.goalLarge = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.goalLarge = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "Obstacle":
-            self.obstacle = ([(x_boxes[0], y_boxes[0]), (x_boxes[-1], y_boxes[-1])])
+            self.obstacle = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         
         for x in range(x_boxes):
             for y in range(y_boxes):
