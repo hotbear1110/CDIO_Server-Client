@@ -8,40 +8,40 @@ client = mqtt.Client("publisher")
 client.connect(MQTT_Broker,1883,60)
 
 def sendMoveForward(payload=0):
-  client.publish("moveForward", payload)
+  client.publish("moveForward", round(payload))
 
 def sendMoveBackward(payload=0):
-  client.publish("moveBackward", payload)
+  client.publish("moveBackward", round(payload))
 
 def sendMoveLeft(payload=0):
-  client.publish("moveLeft", payload)
+  client.publish("moveLeft", round(payload))
 
 def sendMoveLeftBackward(payload=0):
-  client.publish("moveLeftBackward", payload)
+  client.publish("moveLeftBackward", round(payload))
 
 def sendMoveLeftMotor(payload=0):
-  client.publish("moveLeftMotor", payload)
+  client.publish("moveLeftMotor", round(payload))
 
 def sendMoveRight(payload=0):
-  client.publish("moveRight", payload)
+  client.publish("moveRight", round(payload))
 
 def sendMoveRightBackward(payload=0):
-  client.publish("moveRightBackward", payload)
+  client.publish("moveRightBackward", round(payload))
 
 def sendMoveRightMotor(payload=0):
-  client.publish("moveRightMotor", payload)
+  client.publish("moveRightMotor", round(payload))
 
 def sendMoveStop(payload=0):
-  client.publish("moveStop", payload)
+  client.publish("moveStop", round(payload))
 
 def sendMoveWiggle(payload=0):
-  client.publish("moveWiggle", payload)
+  client.publish("moveWiggle", round(payload))
 
 
 def sendSpinForward(payload=0):
-  client.publish("spinForward", payload)
+  client.publish("spinForward", round(payload))
 
 def sendSpinBackward(payload=0):
-  client.publish("spinBackward", payload)
+  client.publish("spinBackward", round(payload))
 
 #client.loop_forever()

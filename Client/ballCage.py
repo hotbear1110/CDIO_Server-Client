@@ -4,11 +4,11 @@ import math
 
 spinner = MediumMotor(OUTPUT_C)
 
-def spin_forward():
+def spin_forward(payload):
     spinner.duty_cycle_sp=-50
     spinner.run_direct()
 
-def spin_backward():
+def spin_backward(payload):
     print(spinner.position)
     newPos = math.floor(spinner.position/spinner.count_per_rot)*spinner.count_per_rot
     print(newPos)

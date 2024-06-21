@@ -310,14 +310,16 @@ def algo():
         # Calculation of angle to turn and turning
         target_angle = math.degrees(math.atan2(direction_y, direction_x))
         if target_angle >= 180:
-            server.sendMoveLeft(-target_angle)
+            server.sendMoveLeft(round(360-target_angle))
 
         elif target_angle < 180:
-            server.sendMoveRight(target_angle)
+            server.sendMoveRight(round(target_angle))
 
         # Move forward next point
         while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
-            server.sendMoveForward(30)
+            server.sendSpinForward()
+            server.sendMoveForward(50)
+
             if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
                 server.sendMoveStop()
 

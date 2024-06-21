@@ -37,7 +37,7 @@ def on_connect(client, userdata, flags, rc):
     spkr.play_file('startup.wav')
        
 def on_message(client, userdata, msg):
-    msg.payload = msg.payload.decode("utf-8")
+    msg.payload = float(msg.payload.decode("utf-8"))
     print(msg.topic)
     if msg.topic == "moveBackward":
         Client.moveBackward.move_backward(msg.payload)
