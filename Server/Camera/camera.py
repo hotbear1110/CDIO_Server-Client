@@ -78,6 +78,9 @@ class Grid:
         return self.egg
     
     def getObstacle(self):
+        return self.obstacle
+    
+    def getObstacleCross(self):
         egg_x1, egg_y1 = self.egg[0]
         egg_x2, egg_y2 = self.egg[1]
         obstacle_x1, obstacle_y1 = self.obstacle[0]
@@ -296,7 +299,7 @@ def runModel(cap):
 
                 drawInGrid(img, x1, y1, x2, y2, rgb)
                 
-            obstacle = grid.getObstacle()
+            obstacle = grid.getObstacleCross()
 
             cross1_x1, cross1_y1 = obstacle[0][0]
             cross1_x2, cross1_y2 = obstacle[0][1]

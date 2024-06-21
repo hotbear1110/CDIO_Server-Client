@@ -138,6 +138,8 @@ class Graph:
         node3 = self.add_node(x1 - offset, y2 - offset)
         node4 = self.add_node(x2 + offset, y2 - offset)
 
+        print(node1)
+
         # Add edges from each corner to the current goal
         self.add_edge(node1, current_goal)
         self.add_edge(node2, current_goal)
@@ -213,6 +215,7 @@ class Logic:
                         moving = False
 
 def algo():
+    time.sleep(10)
     global robot
     global grid
 
@@ -228,6 +231,9 @@ def algo():
         while queue:
             (dist, current) = heapq.heappop(queue)
             for neighbor, cost in current.neighbors.items():
+                if neighbor not in distances:
+                    distances[neighbor] = float('infinity')
+
                 old_cost = distances[neighbor]
                 new_cost = dist + cost
                 if new_cost < old_cost:
@@ -258,7 +264,7 @@ def algo():
     # oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
 
     # Real setters.
-    obstacle = camera.grid.getObstacle()[0]
+    obstacle = camera.grid.getObstacle()
     print("Check here!")
     print(obstacle)
     robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
@@ -272,8 +278,8 @@ def algo():
 
 
     # Initialize the four nodes around the obstacle
-    current_goal = graph.nodes[(oball.x, oball.y)]  # Replace with the actual current goal
-    graph.init_vis(obstacle, goal)
+    current_goal = oball  # Replace with the actual current goal
+    graph.init_vis(obstacle, current_goal)
     graph.update_edges(robot, oball)
     # Update the edges based on the current goal
     graph.add_edge(robot, oball)
