@@ -285,7 +285,7 @@ def algo():
     # Logic.allign()
     # First goal node.
     # current_goal = graph.nodes[(oball.x, oball.y)]
-    def turn_and_drive_towards_node(current_goal):
+    def turn_and_drive_towards_node (current_goal)
 
         #calculation of direction vector
         direction_x = current_goal.x - robot.x
@@ -293,19 +293,20 @@ def algo():
 
         # Calculation of angle to turn and turning
         target_angle = math.degrees(math.atan2(direction_y, direction_x))
-        algo.send_turn_command(target_angle)
+        if target_angle >= 180
+            Server.server.turnLeft(-target_angle)
+        else if targetangle < 180
+            Server.server.turnRight(target_angle)
 
         # Move forward next point
         while robot.x - target_angle.x != 0 and robot.y - target_angle.y != 0:
             Server.sendMoveForward(30)
-            if robot.x - target_angle.x == 0 and robot.y - target_angle.y == 0:
+            if robot.x - target_angle.x = 0 and robot.y - target_angle.y = 0:
                 Server.sendMoveStop()
-
 
         # Updating the robots coordinates
         target_angle.x = robot.x
         target_angle.y = robot.y
-
     # TODO: Turn and drive towards said path.
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
