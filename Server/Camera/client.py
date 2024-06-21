@@ -289,7 +289,7 @@ def algo():
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
 
-    camera.grid.
+
 
     # Second goal node.
     robot = oball
