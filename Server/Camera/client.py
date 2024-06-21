@@ -250,10 +250,16 @@ def algo():
     #Hard coded testing stuff.
 
     # Initialize the graph with nodes for important objects.
-    obstacle = [(3, 4), (5, 2)]
-    robot = graph.add_node(*camera.grid.getMidpoint([(0, 0), (0, 0)]))
-    goal = graph.add_node(*camera.grid.getMidpoint([(5, 10), (6, 10)]))
-    oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
+    # Hardcoded tests.
+    # obstacle = [(3, 4), (5, 2)]
+    # robot = graph.add_node(*camera.grid.getMidpoint([(0, 0), (0, 0)]))
+    # goal = graph.add_node(*camera.grid.getMidpoint([(5, 10), (6, 10)]))
+    # oball = graph.add_node(*camera.grid.getMidpoint([(12, 5), (12, 5)]))
+    obstacle = camera.grid.getObstacle()
+    robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobotFront()))
+    goal = graph.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
+    oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
+
     # oball = graph.add_node(*camera.grid.getMidpoint([camera.grid.getGoalSmall(), camera.grid.getGoalSmall()]))
 
 
@@ -283,6 +289,8 @@ def algo():
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
 
+    camera.grid.
+
     # Second goal node.
     robot = oball
     current_goal = goal
@@ -290,9 +298,7 @@ def algo():
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
 
-
-
-    #Third goal node.
+    # Third goal node.
     graph.add_balls(1)
     robot = goal
 
