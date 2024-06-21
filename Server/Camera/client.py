@@ -175,26 +175,28 @@ class Logic:
     # At the start, put the robot so it lines up with the wall as much as possible.
     def allign(self):
         prev_x, prev_y = grid.camera.getRobot()
+        prev_front_x, prev_front_y = grid.camera.getRobotFront()
+        prev_back_x, prev_back_y = grid.camera.getRobotBack()
         Server.server.sendMoveForward(50)
         moving = True
         iteration = 1
         xiteration = 1
+
         while moving:
-            robot.x, robot.y = grid.camera.getRobot()
-            if abs(robot.x - prev_x) == 1 and robot.y == prev_y:
+            front.x, front.y = grid.camera.getRobotFront()
+            back.x, back.y = grid.camera.getRobotBack()
+            if abs(front_x - prev_front_x) == 1 and front_y == prev_front_y and abs(back_x - prev_back_x) == 1 and back_y == prev_back_y:
                 print("Robot has moved one tile horizontally.")
-                # We are at a spot we can measure. Note the degrees of the gyro.
-                # TODO: Adjust how many tiles is good enough for it to be going straight.
                 xiteration = xiteration + 1
 
                 if xiteration == 3:
-                    # TODO: Reset gyro so its 0 when its alligned.
                     moving = False
                     # Server.server.sendMoveStop()
 
 
-            elif abs(robot.y - prev_y) == 1 and robot.x == prev_x:
+            elif abs(front_y - prev_front_y) == 1 and front_x == prev_front_x and abs(back_y - prev_back_y) == 1 and back_x == prev_back_x:
                 print("Robot has moved one tile vertically.")
+                
                 if robot.y - prev_y > 0:  # Robot has moved up
                     # TODO: Please make the commands take a parameter as degrees to turn or move forward speed.
                     # Server.server.sendMoveRight(5 / iteration)  # Turn right to go back to the tile.
