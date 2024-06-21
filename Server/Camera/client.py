@@ -177,6 +177,7 @@ class Logic:
         prev_x, prev_y = grid.camera.getRobot()
         prev_front_x, prev_front_y = grid.camera.getRobotFront()
         prev_back_x, prev_back_y = grid.camera.getRobotBack()
+
         Server.server.sendMoveForward(50)
         moving = True
         iteration = 1
@@ -196,7 +197,7 @@ class Logic:
 
             elif abs(front_y - prev_front_y) == 1 and front_x == prev_front_x and abs(back_y - prev_back_y) == 1 and back_x == prev_back_x:
                 print("Robot has moved one tile vertically.")
-                
+
                 if robot.y - prev_y > 0:  # Robot has moved up
                     # TODO: Please make the commands take a parameter as degrees to turn or move forward speed.
                     # Server.server.sendMoveRight(5 / iteration)  # Turn right to go back to the tile.
@@ -212,6 +213,10 @@ class Logic:
                     iteration = iteration + 1
                     if iteration == 5:
                         moving = False
+
+            # Update the previous positions
+            prev_front_x, prev_front_y = front_x, front_y
+            prev_back_x, prev_back_y = back_x, back_y
 
 def algo():
     global robot
@@ -281,20 +286,23 @@ def algo():
     # First goal node.
     # current_goal = graph.nodes[(oball.x, oball.y)]
     
-    def turn_and_drive_towards_node(self, current_goal):
+    def turn_and_drive_towards_node (current_goal)
 
         #calculation of direction vector
-        direction_x = current_goal.x - self.robot.x
-        direction_y = current_goal.y - self.robot.y
+        direction_x = current_goal.x - robot.x
+        direction_y = current_goal.y - robot.y
 
         # Calculation of angle to turn and turning
         target_angle = math.degrees(math.atan2(direction_y, direction_x))
-        self.send_turn_command(target_angle)
+        if target_angle >= 180
+            Server.server.turnLeft(-target_angle)
+        else if targetangle < 180
+            Server.server.turnRight(target_angle)
 
         # Move forward next point
         while robot.x - target_angle.x != 0 and robot.y - target_angle.y != 0:
             Server.sendMoveForward(30)
-            if robot.x - target_angle.x == 0 and robot.y - target_angle.y == 0:
+            if robot.x - target_angle.x = 0 and robot.y - target_angle.y = 0:
                 Server.sendMoveStop()
 
         # Updating the robots coordinates
