@@ -55,15 +55,15 @@ class Grid:
 
         self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
 
-        self.robot = (0, 0, 0, 0)
-        self.robotFront = (0, 0, 0, 0)
-        self.robotBack = (0, 0, 0, 0)
-        self.egg = (0, 0, 0, 0)
-        self.obstacle = (0, 0, 0, 0)
-        self.oBall = (0, 0, 0, 0)
+        self.robot = [(0, 0), (0, 0)]
+        self.robotFront = [(0, 0), (0, 0)]
+        self.robotBack = [(0, 0), (0, 0)]
+        self.egg = [(0, 0), (0, 0)]
+        self.obstacle = [(0, 0), (0, 0)]
+        self.oBall = [(0, 0), (0, 0)]
         self.wBalls = []
-        self.goalSmall = (0, 0, 0, 0)
-        self.goalLarge = (0, 0, 0, 0)
+        self.goalSmall = [(0, 0), (0, 0)]
+        self.goalLarge = [(0, 0), (0, 0)]
 
     def getRobot(self):
         return self.robot
@@ -81,8 +81,8 @@ class Grid:
         egg_x1, egg_y1, egg_x2, egg_y2 = self.egg
         obstacle_x1, obstacle_y1, obstacle_x2, obstacle_y2 = self.obstacle
 
-        cross1 = (0, 0, 0, 0)
-        cross2 = (0, 0, 0, 0)
+        cross1 = [(0, 0), (0, 0)]
+        cross2 = [(0, 0), (0, 0)]
 
         
         obstacle_width = obstacle_x2 - obstacle_x1
@@ -92,19 +92,21 @@ class Grid:
         if ((egg_x2 > obstacle_x1) and (egg_x1 < obstacle_x2)) and ((egg_y2 > obstacle_y1) and (egg_y1 < obstacle_y2)):
             #if egg in the x middel
             if (egg_x1 < ((obstacle_x2 - obstacle_width/2)-obstacle_width/20)) and (egg_x2 > ((obstacle_x2 - obstacle_width/2)+obstacle_width/20)):
-                cross1 = self.obstacle
+                x1, y1, x2, y2 = self.obstacle
+                cross1 = [(x1, y1), (x2, y2)]
 
-                cross2 = (obstacle_x2, obstacle_y1, obstacle_x1, obstacle_y2)
+                cross2 = [(obstacle_x2, obstacle_y1), (obstacle_x1, obstacle_y2)]
             else:
                 #if egg is in the y middle
                 if (egg_y1 < ((obstacle_y2 - obstacle_height/2)-obstacle_height/20)) and (egg_y2 > ((obstacle_y2 - obstacle_height/2)+obstacle_height/20)):
-                    cross1 = self.obstacle
+                    x1, y1, x2, y2 = self.obstacle
+                    cross1 = [(x1, y1), (x2, y2)]
 
-                    cross2 = (obstacle_x2, obstacle_y1, obstacle_x1, obstacle_y2)
+                    cross2 = [(obstacle_x2, obstacle_y1), (obstacle_x1, obstacle_y2)]
                 else:
-                    cross1 = (obstacle_x1 + obstacle_width/2, obstacle_y1, obstacle_x2 - obstacle_width/2, obstacle_y2)
+                    cross1 = [(obstacle_x1 + obstacle_width/2, obstacle_y1), (obstacle_x2 - obstacle_width/2, obstacle_y2)]
                     
-                    cross2 = (obstacle_x1, obstacle_y1 + obstacle_height/2, obstacle_x2, obstacle_y2 - obstacle_height/2)
+                    cross2 = [(obstacle_x1, obstacle_y1 + obstacle_height/2), (obstacle_x2, obstacle_y2 - obstacle_height/2)]
 
 
         return [cross1, cross2]
@@ -290,8 +292,11 @@ def runModel(cap):
                 
             obstacle = grid.getObstacle()
 
-            cross1_x1, cross1_y1, cross1_x2, cross1_y2 = obstacle[0]
-            cross2_x1, cross2_y1, cross2_x2, cross2_y2 = obstacle[1]
+            cross1_x1, cross1_y1 = obstacle[0][0]
+            cross1_x2, cross1_y2 = obstacle[0][1]
+            
+            cross2_x1, cross2_y1= obstacle[1][0]
+            cross2_x2, cross2_y2 = obstacle[1][1]
 
             print(cross1_x1, cross1_y1, cross1_x2, cross1_y2)
             
