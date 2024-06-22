@@ -16,7 +16,8 @@ gyro_sensor.mode = 'GYRO-ANG'
 
 def move_left(payload):
     # Reset the gyro sensor to 0 degrees
-    gyro_sensor.mode = 'GYRO-RATE'  # Temporarily switch to rate mode to reset the sensor
+    gyro_sensor.mode = 'GYRO-CAL'  # Switch to calibration mode to reset the sensor
+    time.sleep(0.5)  # Give it a moment to reset
     gyro_sensor.mode = 'GYRO-ANG'  # Switch back to angle mode
 
     target_angle = -payload  # Target angle to turn right
