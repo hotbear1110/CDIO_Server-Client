@@ -51,6 +51,7 @@ while usr_input == 0:
     print('1. Run Test Footage')
     print('2. Run Webcam')
     print('3. Quit')
+    print('4. Run QuickTest')
     print()
 
     x = input()
@@ -92,4 +93,22 @@ while usr_input == 0:
     elif x == '3':
         os.system('cls')
         usr_input = 1
+    
+    elif x == '4':
+        os.system('cls')
+        print('Starting quick test with 1280x720')
+        width = 1280
+        height = 720
+        os.system('cls')
+        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+        os.system('cls')
+        if not cap.isOpened():
+            print("Cannot open camera")
+            exit()
+
+        cap.set(3, int(width))
+        cap.set(4, int(height))
+        chooseVersion(5)
+
 
