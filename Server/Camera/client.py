@@ -367,27 +367,29 @@ def algo():
             robot.y = current_goal.y
 
         #for wball
-        if current_goal = wBall:
-            target_angle = math.degrees(math.atan2(direction_y, direction_x))
+       for i in range(5): 
+            if current_goal == wBall:
+                target_angle = math.degrees(math.atan2(direction_y, direction_x))
 
-            if target_angle >= 180:
-                server.sendMoveLeft(round(360-target_angle))
+                if target_angle >= 180:
+                    server.sendMoveLeft(round(360-target_angle))
 
-            elif target_angle < 180:
-                server.sendMoveRight(round(target_angle))
+                elif target_angle < 180:
+                    server.sendMoveRight(round(target_angle))
         
          # Move forwards to the Wball
-        if current_goal = wBall:
-            while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
-                server.sendSpinForward()
-                server.sendMoveForward(50)
+            if current_goal == wBall:
+                while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
+                    server.sendSpinForward()
+                    server.sendMoveForward(50)
 
-            if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
-                server.sendMoveStop()
+                if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
+                    server.sendMoveStop()
 
         # Updating the robots coordinates
         robot.x = current_goal.x
         robot.y = current_goal.y
+        
     # TODO: Turn and drive towards said path.
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
