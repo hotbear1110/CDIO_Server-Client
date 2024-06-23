@@ -313,6 +313,7 @@ def algo():
         direction_x = current_goal.x - robot_node.x
         direction_y = current_goal.y - robot_node.y
 
+        #for goal
         if current_goal = goal:
             while robot_node.x - node5.x != 0 and robot_node.x - node5.y != 0:
                 server.sendMoveForward(50)
@@ -338,7 +339,12 @@ def algo():
         #After lined up it unloads balls
         server.sendSpinBackward(50)
 
-        if current_goal = oball:
+        # Updating the robots coordinates
+        robot.x = current_goal.x
+        robot.y = current_goal.y
+
+        #for oball
+        if current_goal = oBall:
             target_angle = math.degrees(math.atan2(direction_y, direction_x))
 
             if target_angle >= 180:
@@ -347,7 +353,7 @@ def algo():
             elif target_angle < 180:
                 server.sendMoveRight(round(target_angle))
 
-            if current_goal = Wball:
+            if current_goal = oBall:
                 while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
                     server.sendSpinForward()
                     server.sendMoveForward(50)
@@ -355,8 +361,12 @@ def algo():
                 if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
                     server.sendMoveStop()
 
+            # Updating the robots coordinates
+            robot.x = current_goal.x
+            robot.y = current_goal.y
 
-        if current_goal = Wball:
+        #for wball
+        if current_goal = wBall:
             target_angle = math.degrees(math.atan2(direction_y, direction_x))
 
             if target_angle >= 180:
@@ -366,7 +376,7 @@ def algo():
                 server.sendMoveRight(round(target_angle))
         
          # Move forwards to the Wball
-        if current_goal = Wball:
+        if current_goal = wBall:
             while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
                 server.sendSpinForward()
                 server.sendMoveForward(50)
