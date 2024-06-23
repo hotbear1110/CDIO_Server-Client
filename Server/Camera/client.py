@@ -65,6 +65,8 @@ client.disconnect()
 """
 
 robot = camera.grid.getMidpoint(camera.grid.getRobot())
+goal = camera.grid.getMidpoint(camera.grid.getGoalSmall())
+print("Small goal", goal)
 
 
 class Node:
@@ -122,7 +124,7 @@ class Graph:
             self.add_edge(node, robot)
 
     def init_vis(self, obstacle, current_goal):
-
+        self.add_node(*goal)
         # print("look here")
         self.add_obstacle(obstacle)
         print(obstacle)
@@ -139,10 +141,10 @@ class Graph:
         node4 = self.add_node(x2 + offset, y2 - offset)
         
         #Node outside goal
-        if 0 <= goal.x 100
-            node5 = self.add_node(Graph.node.(goal.x + 10 , goal,y))
-        else   
-            node5 = self.add_node(Graph.node.(goal.x - 10 , goal,y))
+        if 0 <= goal.x <= 100:
+            node5 = self.add_node(goal.x + 10 , goal.y)
+        else:
+            node5 = self.add_node(goal.x - 10 , goal.y)
 
         print(node1)
 
@@ -276,8 +278,7 @@ def algo():
     print("Obstacle", obstacle)
     robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
     print("Robot", robot)
-    goal = graph.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
-    print ("Small goal", goal)
+
     oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
     print("Oball", oball)
 
@@ -314,8 +315,8 @@ def algo():
         direction_y = current_goal.y - robot_node.y
 
         #for goal
-        if current_goal = goal:
-            while robot_node.x - node5.x != 0 and robot_node.x - node5.y != 0:
+        if current_goal == goal:
+            while robot_node.x - graph.nodes[(node5.x)] != 0 and robot_node.x - node5.y != 0:
                 server.sendMoveForward(50)
             if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
                 server.sendMoveStop()
@@ -408,6 +409,7 @@ def algo():
     robot = goal
 
     min_distance = float('inf')
+    # TODO: Hente balls som loop.
     for node in graph.balls:  # Iterate over ball nodes only
         print("look here 1")
         # Calculate the shortest distance from the robot to the node
