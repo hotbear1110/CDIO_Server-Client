@@ -90,6 +90,13 @@ class Graph:
         self.robot = self.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
         self.goal = self.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
 
+        # Node outside goal
+        if 0 <= self.goal.x <= 100:
+            self.goal_offset = self.add_node(self.goal.x + 10, self.goal.y)
+
+        else:
+            self.goal_offset = self.add_node(self.goal.x - 10, self.goal.y)
+
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
 
@@ -157,12 +164,6 @@ class Graph:
         node2 = self.add_node(x2 + offset, y1 + offset)
         node3 = self.add_node(x1 - offset, y2 - offset)
         node4 = self.add_node(x2 + offset, y2 - offset)
-
-        #Node outside goal
-        if 0 <= goal.x <= 100:
-            node5 = self.add_node(goal.x + 10 , goal.y)
-        else:
-            node5 = self.add_node(goal.x - 10 , goal.y)
 
         print(node1)
 
@@ -291,57 +292,52 @@ def algo():
     # TODO: Think the code doesnt keep going until this function is finished.
 
     def turn_and_drive_towards_node(current_goal):
-        robot_node = graph.nodes[(robot.x, robot.y)]
 
         #Calculation of direction vector
-        direction_x = current_goal.x - robot_node.x
-        direction_y = current_goal.y - robot_node.y
+        direction_x = current_goal.x - robot.x
+        direction_y = current_goal.y - robot.y
 
         def turn_to_target(target_x, target_y):
-            direction_x = target_x - robot_node.x
-            direction_y = target_y - robot_node.y
+            direction_x = target_x - robot.x
+            direction_y = target_y - robot.y
             target_angle = math.degrees(math.atan2(direction_y, direction_x)) % 360
-        
+
             if target_angle > 180:
                 server.sendMoveLeft(round(360 - target_angle))
             else:
                 server.sendMoveRight(round(target_angle))
 
         def move_to_target(target_x, target_y):
-            while robot_node.x != target_x or robot_node.y != target_y:
+            while robot.x != target_x or robot.y != target_y:
                 server.sendSpinForward()
                 server.sendMoveForward(50)
-                robot_node = graph.nodes[(robot.x, robot.y)]  # Update robot_node position
+                robot = graph.nodes[(robot.x, robot.y)]  # Update robot position
 
             server.sendMoveStop()
 
         # For goal
-        if current_goal == goal:
-            turn_to_target(node5.x, node5.y)
+        if current_goal == graph.goal_offset:
+            turn_to_target(*current_goal)
             move_to_target(current_goal.x, current_goal.y)
             server.sendSpinBackward(50)
             robot.x = current_goal.x
             robot.y = current_goal.y
-            return
 
-        # For oBall
-        if current_goal == oBall:
-            turn_to_target(current_goal.x, current_goal.y)
-            move_to_target(current_goal.x, current_goal.y)
+            # Default update of robot coordinates
             robot.x = current_goal.x
             robot.y = current_goal.y
             return
 
-        # For wBall
-        if current_goal == wBall:
+        # For balls
+        else:
             turn_to_target(current_goal.x, current_goal.y)
             move_to_target(current_goal.x, current_goal.y)
             robot.x = current_goal.x
             robot.y = current_goal.y
-
-        # Default update of robot coordinates
-        robot.x = current_goal.x
-        robot.y = current_goal.y
+            # Default update of robot coordinates
+            robot.x = current_goal.x
+            robot.y = current_goal.y
+            return
 
     def find_closest_ball(self):
         min_distance = float('inf')
@@ -366,7 +362,8 @@ def algo():
     def add_balls():
         for ball in camera.grid.getWballs():
             # Get the coordinates of the ball
-            x, y = ball
+            x, y = camera.grid.getMidpoint(ball)
+
 
             # Create a new node at these coordinates
             node = Node(x, y)
@@ -439,17 +436,19 @@ def algo():
 
     # TODO: When camera.grid.getWballs() is fixed, this should work.
     add_balls()
-    robot = goal
-
+    print("look here!!!")
+    print(graph.goal_offset)
+    robot = graph.goal_offset
+    # find_closest_ball(graph)
+    print(current_goal)
+    # turn_and_drive_towards_node(current_goal)
 
     # closest_node is now the closest node to the robot among the randomly generated nodes
     # Pass closest_node to graph.update_edges
 
-
     graph.update_edges(current_goal, robot)
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
-
 
     # graph.update_edges(current_goal, robot)
 
