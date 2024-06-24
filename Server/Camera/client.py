@@ -158,6 +158,12 @@ class Graph:
         node3 = self.add_node(x1 - offset, y2 - offset)
         node4 = self.add_node(x2 + offset, y2 - offset)
 
+        #Node outside goal
+        if 0 <= goal.x <= 100:
+            node5 = self.add_node(goal.x + 10 , goal.y)
+        else:
+            node5 = self.add_node(goal.x - 10 , goal.y)
+
         print(node1)
 
         # Add edges from each corner to the current goal
