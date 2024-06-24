@@ -357,7 +357,7 @@ def runLowPerformanceModel(cap):
             for box in boxes:
                 # bounding box
                 x1, y1, x2, y2 = box.xyxy[0]
-                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2) # convert to int values
+                x1, y1, x2, y2 = int(x1), int(cap.get(4) - y1), int(x2), int(cap.get(4) - y2) # convert to int values
 
                 # confidence
                 confidence = math.ceil((box.conf[0]*100))/100

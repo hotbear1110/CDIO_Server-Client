@@ -13,10 +13,19 @@ import Client.moveRightBackward
 import Client.moveRightMotor
 import Client.moveStop
 import Client.moveWiggle
+import signal
+import sys
 
 from ev3dev2.sound import Sound
 
 spkr = Sound()
+def signal_handler(sig, frame):
+    print('You pressed Ctrl+C!')
+    Client.moveStop.move_stop(1)
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -34,7 +43,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("spinForward")
     client.subscribe("spinBackward")
 
-    spkr.play_file('startup.wav')
+    # spkr.play_file('startup.wav')
        
 def on_message(client, userdata, msg):
     msg.payload = float(msg.payload.decode("utf-8"))
@@ -63,10 +72,14 @@ def on_message(client, userdata, msg):
         Client.ballCage.spin_forward(msg.payload)
     elif msg.topic == "spinBackward":
         Client.ballCage.spin_backward(msg.payload)
+def on_disconnect(client, userdata, flags, rc):
+    Client.moveStop.move_stop(1)
+
 client = mqtt.Client("Subscriber")
 client.connect("localhost",1883,60)
 
 client.on_connect = on_connect
 client.on_message = on_message
+client.on_disconnect = on_disconnect
 
 client.loop_forever()

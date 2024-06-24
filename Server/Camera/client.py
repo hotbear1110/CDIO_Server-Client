@@ -64,8 +64,6 @@ time.sleep(1)
 client.disconnect()
 """
 
-robot = camera.grid.getMidpoint(camera.grid.getRobot())
-
 
 class Node:
     def __init__(self, x, y):
@@ -79,12 +77,18 @@ class Node:
     def __str__(self):
         return f'Node({self.x}, {self.y})'
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class Graph:
+
     def __init__(self):
         self.nodes = {}
         self.balls = []  # List to store ball nodes
         self.obstacles = []
+        self.robot = self.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
+        self.goal = self.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
 
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
@@ -93,6 +97,16 @@ class Graph:
         node = Node(x, y)
         self.nodes[(x, y)] = node
         return node
+
+    def remove_node(self, x, y):
+        if (x, y) in self.nodes:
+            node = self.nodes.pop((x, y))
+            if node in self.balls:
+                self.balls.remove(node)
+            # Remove the node from its neighbors' lists
+            for neighbor in node.neighbors:
+                neighbor.neighbors.pop(node)
+            print(f'Node at ({x}, {y}) removed.')
 
     def line_of_sight(self, node1, node2):
         # Generate points on the line between node1 and node2
@@ -120,6 +134,12 @@ class Graph:
         for node in self.nodes.values():
             self.add_edge(node, current_goal)
             self.add_edge(node, robot)
+
+    def connect_all_nodes(self):
+        for node1 in self.nodes.values():
+            for node2 in self.nodes.values():
+                if node1 != node2 and self.line_of_sight(node1, node2):
+                    self.add_edge(node1, node2)
 
     def init_vis(self, obstacle, current_goal):
 
@@ -158,24 +178,39 @@ class Graph:
             # Test to check line of sight.
             # print(f"Checking node at ({node.x}, {node.y}) against obstacle at (({x1}, {y1}), ({x2}, {y2}))")
             if x1 <= node.x <= x2 and y2 <= node.y <= y1:
-                print("Node is in obstacle")
+                # print("Node is in obstacle")
                 return True
         return False
 
+    # Testing function.
     def add_balls(self, num_nodes):
-        for _ in range(num_nodes):
-            x = 11
-            y = 8
+        for i in range(num_nodes):
+            x = -55 * (i + 1)
+            y = 100 / (i + 1)
+            if i == 2:
+                x = 15
+                y = 50
             # x = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for x
             # y = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for y
             node = Node(x, y)
             self.nodes[(x, y)] = node
             self.balls.append(node)  # Add the new node to the balls list
+            # self.add_node(x, y)
+            print("adding balls now")
+            print(node)
 
 
-class Logic:
+def algo():
+    time.sleep(10)
+    global grid
+    start = 1
+    graph = Graph()
+    robot = graph.robot
+    goal = graph.goal
+
     # Attempt at aligning robot without color sensor.
     # At the start, put the robot so it lines up with the wall as much as possible.
+
     def allign(self):
         prev_x, prev_y = grid.camera.getRobot()
         server.sendMoveForward(50)
@@ -214,15 +249,6 @@ class Logic:
                     if iteration == 5:
                         moving = False
 
-def algo():
-    time.sleep(20)
-
-    global robot
-    global grid
-
-    start = 1
-    graph = Graph()
-
     def shortest(graph, start_node, end_node):
         queue = [(0, start_node)]
         distances = {node: float('infinity') for node in graph.nodes.values()}
@@ -255,6 +281,36 @@ def algo():
 
         return distances, path
 
+    # TODO: Turn and drive towards said path.
+
+    def turn_and_drive_towards_node(current_goal):
+
+        # robot = graph.nodes[(robot.x, robot.y)]
+
+        #calculation of direction vector
+        direction_x = current_goal.x - robot.x
+        direction_y = current_goal.y - robot.y
+
+        # Calculation of angle to turn and turning
+        target_angle = math.degrees(math.atan2(direction_y, direction_x))
+        if target_angle >= 180:
+            server.sendMoveLeft(round(360 - target_angle))
+
+        elif target_angle < 180:
+            server.sendMoveRight(round(target_angle))
+
+        # Move forward next point
+        while robot.x - current_goal.x != 0 and robot.y - current_goal.y != 0:
+            server.sendSpinForward()
+            server.sendMoveForward(50)
+
+            if robot.x - current_goal.x == 0 and robot.y - current_goal.y == 0:
+                server.sendMoveStop()
+
+        # Updating the robots coordinates
+        robot.x = current_goal.x
+        robot.y = current_goal.y
+
     #Hard coded testing stuff.
 
     # Initialize the graph with nodes for important objects.
@@ -268,18 +324,15 @@ def algo():
     obstacle = camera.grid.getObstacle()
     print("Check here!")
     print("Obstacle", obstacle)
-    robot = graph.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
     print("Robot", robot)
-    goal = graph.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
-    print ("Small goal", goal)
+    print("Small goal", goal)
     oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
     print("Oball", oball)
 
     # oball = graph.add_node(*camera.grid.getMidpoint([camera.grid.getGoalSmall(), camera.grid.getGoalSmall()]))
 
-
     # Initialize the four nodes around the obstacle
-    current_goal = oball # Replace with the actual current goal
+    current_goal = oball  # Replace with the actual current goal
     graph.init_vis(obstacle, current_goal)
     graph.update_edges(robot, oball)
     # Update the edges based on the current goal
@@ -299,41 +352,13 @@ def algo():
     # Logic.allign()
     # First goal node.
     # current_goal = graph.nodes[(oball.x, oball.y)]
-    def turn_and_drive_towards_node (current_goal):
 
-        robot_node = graph.nodes[(robot.x, robot.y)]
-
-        #calculation of direction vector
-        direction_x = current_goal.x - robot_node.x
-        direction_y = current_goal.y - robot_node.y
-
-        # Calculation of angle to turn and turning
-        target_angle = math.degrees(math.atan2(direction_y, direction_x))
-        if target_angle >= 180:
-            server.sendMoveLeft(round(360-target_angle))
-
-        elif target_angle < 180:
-            server.sendMoveRight(round(target_angle))
-
-        # Move forward next point
-        while robot_node.x - current_goal.x != 0 and robot_node.y - current_goal.y != 0:
-            server.sendSpinForward()
-            server.sendMoveForward(50)
-
-            if robot_node.x - current_goal.x == 0 and robot_node.y - current_goal.y == 0:
-                server.sendMoveStop()
-
-        # Updating the robots coordinates
-        robot.x = current_goal.x
-        robot.y = current_goal.y
-    # TODO: Turn and drive towards said path.
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
 
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
 
-    turn_and_drive_towards_node(current_goal)
-
+    # turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
@@ -343,23 +368,28 @@ def algo():
     draw_graph(graph, path)
 
     # Third goal node.
-    graph.add_balls(1)
+    graph.add_balls(3)
     robot = goal
 
-    min_distance = float('inf')
-    for node in graph.balls:  # Iterate over ball nodes only
-        print("look here 1")
-        # Calculate the shortest distance from the robot to the node
-        graph.update_edges(current_goal, robot)
-        distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
-
-        # If the calculated distance is less than min_distance, update min_distance and closest_node
-        if distances[node] < min_distance:
-            min_distance = distances[node]
-            print("look here 2")
-            print(current_goal)
+    def find_closest_ball(self):
+        min_distance = float('inf')
+        # graph.connect_all_nodes()
+        for node in graph.balls:  # Iterate over ball nodes only
+            print("look here 1")
+            # Calculate the shortest distance from the robot to the node
+            graph.update_edges(node, robot)
+            distances, path = shortest(graph, robot, node)
             print(node)
-            current_goal = node
+            print(distances[node])
+
+            # If the calculated distance is less than min_distance, update min_distance and closest_node
+            if node in distances and distances[node] < min_distance:
+                min_distance = distances[node]
+                print("look here 2")
+                print(node)
+                print(distances[node])
+                print(current_goal)
+                current_goal = node
 
     # closest_node is now the closest node to the robot among the randomly generated nodes
     # Pass closest_node to graph.update_edges
@@ -370,7 +400,6 @@ def algo():
 
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
     # draw_graph(graph, path)
-
 
 #Config location is:
 #/etc/mosquitto/conf.d
