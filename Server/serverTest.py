@@ -4,8 +4,19 @@ import Camera.server as server
 import time
 
 server.sendMoveForward(50)
-time.sleep(10)
+time.sleep(3)
 
+server.sendMoveStop()
+
+time.sleep(0.5)
+
+server.sendMoveRight(90)
+
+time.sleep(5)
+
+server.sendMoveForward(50)
+
+time.sleep(3)
 server.sendMoveStop()
 
 """
