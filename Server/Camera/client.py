@@ -308,9 +308,11 @@ def algo():
             global orientation
             print("look here!!!")
             direction_x = robot.x - target_x
+            print(direction_x)
             direction_y = target_y - robot.y
+            print(direction_y)
             target_angle = math.degrees(math.atan2(direction_y, direction_x))
-            print("Moving towards",current_goal)
+            print(target_angle)
 
             target_angle = target_angle - orientation
             orientation = orientation + target_angle
@@ -341,7 +343,7 @@ def algo():
         # For goal
         print("if current_goal == graph.goal_offset")
         if current_goal == graph.goal_offset:
-            turn_to_target(current_goal.x,current_goal.y)
+            turn_to_target(*current_goal)
             move_to_target(current_goal.x, current_goal.y)
             turn_to_target(graph.goal)
             server.sendSpinBackward(50)
@@ -446,24 +448,11 @@ def algo():
 
     # prints shortest path from robot to current goal
     print(shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal))
-    def forwardtest():
-        robot = camera.grid.getMidpoint(camera.grid.getRobotBack())
-        print("start time node robot", robot)
-        server.sendMoveForward(50)
-        time.sleep(2)
-        server.sendMoveStop()
-        time.sleep(10)
-        robot = camera.grid.getMidpoint(camera.grid.getRobotBack())
-        print("end time node robot", robot)
 
     # Logic.allign()
     # First goal node.
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
-    # forwardtest()
-
-
-
-    # turn_and_drive_towards_node(current_goal)
+    turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
@@ -482,19 +471,16 @@ def algo():
     # TODO: When camera.grid.getWballs() is fixed, this should work.
     add_balls()
     print("look here!!!")
-    # print(graph.goal_offset)
-    robot = current_goal
+    print(graph.goal_offset)
+    robot = goal
 
     # find_closest_ball(graph)
     for node in graph.balls:
         find_closest_ball(graph)
-
         turn_and_drive_towards_node(current_goal)
-        distances, path = shortest(graph, robot, current_goal)
-        draw_graph(graph, path)
 
     current_goal = goal
-    turn_and_drive_towards_node(current_goal)
+
     # turn_and_drive_towards_node(current_goal)
 
     # closest_node is now the closest node to the robot among the randomly generated nodes
