@@ -284,32 +284,67 @@ def algo():
     # TODO: Turn and drive towards said path.
     # TODO: Think the code doesnt keep going until this function is finished.
 
-    def turn_and_drive_towards_node(current_goal):
+    def turn_and_drive_towards_node (current_goal):
 
-        # robot = graph.nodes[(robot.x, robot.y)]
-        robot = graph.robot
+        robot_node = graph.nodes[(robot.x, robot.y)]
+
         #calculation of direction vector
-        direction_x = current_goal.x - robot.x
-        direction_y = current_goal.y - robot.y
+        direction_x = current_goal.x - robot_node.x
+        direction_y = current_goal.y - robot_node.y
 
-        # Calculation of angle to turn and turning
-        target_angle = math.degrees(math.atan2(direction_y, direction_x))
-        if target_angle >= 180:
-            server.sendMoveLeft(round(360 - target_angle))
+    def turn_and_drive_towards_node(current_goal):
+        robot_node = graph.nodes[(robot.x, robot.y)]
 
-        elif target_angle < 180:
-            server.sendMoveRight(round(target_angle))
+        #Calculation of direction vector
+        direction_x = current_goal.x - robot_node.x
+        direction_y = current_goal.y - robot_node.y
 
-        # Move forward next point
-        while robot.x - current_goal.x != 0 and robot.y - current_goal.y != 0:
-            server.sendSpinForward()
-            server.sendMoveForward(50)
+        def turn_to_target(target_x, target_y):
+            direction_x = target_x - robot_node.x
+            direction_y = target_y - robot_node.y
+            target_angle = math.degrees(math.atan2(direction_y, direction_x)) % 360
+        
+            if target_angle > 180:
+                server.sendMoveLeft(round(360 - target_angle))
+            else:
+                server.sendMoveRight(round(target_angle))
 
-            if robot.x - current_goal.x == 0 and robot.y - current_goal.y == 0:
-                server.sendMoveStop()
+        def move_to_target(target_x, target_y):
+            while robot_node.x != target_x or robot_node.y != target_y:
+                server.sendSpinForward()
+                server.sendMoveForward(50)
+                robot_node = graph.nodes[(robot.x, robot.y)]  # Update robot_node position
 
-        # Updating the robots coordinates
-        robot = current_goal
+            server.sendMoveStop()
+
+        # For goal
+        if current_goal == goal:
+            turn_to_target(node5.x, node5.y)
+            move_to_target(current_goal.x, current_goal.y)
+            server.sendSpinBackward(50)
+            robot.x = current_goal.x
+            robot.y = current_goal.y
+            return
+
+        # For oBall
+        if current_goal == oBall:
+            turn_to_target(current_goal.x, current_goal.y)
+            move_to_target(current_goal.x, current_goal.y)
+            robot.x = current_goal.x
+            robot.y = current_goal.y
+            return
+
+        # For wBall, loop 5 times
+        for _ in range(5):
+            if current_goal == wBall:
+                turn_to_target(current_goal.x, current_goal.y)
+                move_to_target(current_goal.x, current_goal.y)
+                robot.x = current_goal.x
+                robot.y = current_goal.y
+
+        # Default update of robot coordinates
+        robot.x = current_goal.x
+        robot.y = current_goal.y
 
     def find_closest_ball(self):
         min_distance = float('inf')
