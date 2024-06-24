@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ev3dev.auto import *
+from ev3dev2.auto import *
 
 left = LargeMotor(OUTPUT_A)
 right = LargeMotor(OUTPUT_B)

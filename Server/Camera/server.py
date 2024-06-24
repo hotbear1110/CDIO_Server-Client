@@ -2,8 +2,8 @@
 
 import paho.mqtt.client as mqtt
 
-MQTT_Broker = '192.168.1.156'
-# MQTT_Broker = '192.168.5.34'
+# MQTT_Broker = '192.168.1.156'
+MQTT_Broker = '192.168.5.34'
 
 
 client = mqtt.Client("publisher")

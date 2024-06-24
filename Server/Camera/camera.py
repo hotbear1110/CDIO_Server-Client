@@ -340,7 +340,7 @@ def runLowPerformanceModel(cap):
             # print(i, ': ', x)
             i = i + 1
 
-    model_number = input()
+    model_number = 5
 
     # model
     model = YOLO(models[int(model_number)-1])

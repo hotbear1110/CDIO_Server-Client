@@ -43,7 +43,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("spinForward")
     client.subscribe("spinBackward")
 
-    # spkr.play_file('startup.wav')
+    spkr.play_file('startup.wav')
        
 def on_message(client, userdata, msg):
     msg.payload = float(msg.payload.decode("utf-8"))

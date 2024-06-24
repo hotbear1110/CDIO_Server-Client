@@ -13,6 +13,7 @@ def chooseVersion(cap):
     print('1. Run with visuals')
     print('2. Run without visuals')
     print('3. Quit')
+
     print()
 
     x = input()
@@ -109,6 +110,12 @@ while usr_input == 0:
 
         cap.set(3, int(width))
         cap.set(4, int(height))
-        chooseVersion(5)
+        t1 = threading.Thread(target=runLowPerformanceModel, args=[cap])
+        t2 = threading.Thread(target=algo)
 
+        t1.start()
+        t2.start()
+
+        t1.join()
+        t2.join()
 

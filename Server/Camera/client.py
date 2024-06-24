@@ -201,7 +201,7 @@ class Graph:
 
 
 def algo():
-    time.sleep(10)
+    time.sleep(20)
     global grid
     start = 1
     graph = Graph()
@@ -287,7 +287,7 @@ def algo():
     def turn_and_drive_towards_node(current_goal):
 
         # robot = graph.nodes[(robot.x, robot.y)]
-
+        robot = graph.robot
         #calculation of direction vector
         direction_x = current_goal.x - robot.x
         direction_y = current_goal.y - robot.y
@@ -309,8 +309,7 @@ def algo():
                 server.sendMoveStop()
 
         # Updating the robots coordinates
-        robot.x = current_goal.x
-        robot.y = current_goal.y
+        robot = current_goal
 
     def find_closest_ball(self):
         min_distance = float('inf')
@@ -393,7 +392,7 @@ def algo():
 
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
 
-    turn_and_drive_towards_node(current_goal)
+    # turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
@@ -407,7 +406,7 @@ def algo():
     print(len(camera.grid.getWballs()))
 
     # TODO: When camera.grid.getWballs() is fixed, this should work.
-    # add_balls()
+    add_balls()
     robot = goal
 
 
