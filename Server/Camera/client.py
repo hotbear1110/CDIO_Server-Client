@@ -308,6 +308,7 @@ def algo():
                 server.sendMoveRight(round(target_angle))
 
         def move_to_target(target_x, target_y):
+            robot = graph.robot
             while robot.x != target_x or robot.y != target_y:
                 server.sendSpinForward()
                 server.sendMoveForward(50)
@@ -421,15 +422,17 @@ def algo():
 
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
 
-    # turn_and_drive_towards_node(current_goal)
+    turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
+    graph.remove_node(oball.x,oball.y)
+    goal = graph.goal_offset
     current_goal = goal
     graph.update_edges(current_goal, robot)
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
-
+    turn_and_drive_towards_node(current_goal)
     # Third goal node.
     print(camera.grid.getWballs())
     print(len(camera.grid.getWballs()))
@@ -438,9 +441,15 @@ def algo():
     add_balls()
     print("look here!!!")
     print(graph.goal_offset)
-    robot = graph.goal_offset
+    robot = goal
+
     # find_closest_ball(graph)
-    print(current_goal)
+    for node in graph.balls:
+        find_closest_ball(graph)
+        turn_and_drive_towards_node(current_goal)
+
+    current_goal = goal
+
     # turn_and_drive_towards_node(current_goal)
 
     # closest_node is now the closest node to the robot among the randomly generated nodes
