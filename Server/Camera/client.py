@@ -366,8 +366,7 @@ def algo():
             robot.x = current_goal.x
             robot.y = current_goal.y
 
-        #for wball
-       for i in range(5): 
+            #for wball
             if current_goal == wBall:
                 target_angle = math.degrees(math.atan2(direction_y, direction_x))
 
