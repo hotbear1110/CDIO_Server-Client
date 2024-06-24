@@ -326,13 +326,12 @@ def algo():
             robot.y = current_goal.y
             return
 
-        # For wBall, loop 5 times
-        for _ in range(5):
-            if current_goal == wBall:
-                turn_to_target(current_goal.x, current_goal.y)
-                move_to_target(current_goal.x, current_goal.y)
-                robot.x = current_goal.x
-                robot.y = current_goal.y
+        # For wBall
+        if current_goal == wBall:
+            turn_to_target(current_goal.x, current_goal.y)
+            move_to_target(current_goal.x, current_goal.y)
+            robot.x = current_goal.x
+            robot.y = current_goal.y
 
         # Default update of robot coordinates
         robot.x = current_goal.x
