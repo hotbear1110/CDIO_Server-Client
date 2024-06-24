@@ -14,6 +14,8 @@ import server as server
 
 
 def draw_graph(graph, path=None):
+    if True:
+        return
     G = nx.Graph()
 
     for node in graph.nodes.values():
@@ -335,6 +337,8 @@ def algo():
                 if temp != robot:
                     print(robot)
                     temp = robot
+                time.sleep(1)
+            server.sendMoveStop()
 
         # For goal
         print("if current_goal == graph.goal_offset")
@@ -399,13 +403,13 @@ def algo():
             print(node)
 
     def is_robot_on_node(current_goal):
-            tolerance = 3  # Define the tolerance range
-            for dx in range(-tolerance, tolerance + 1):
-                for dy in range(-tolerance, tolerance + 1):
-                    if robot.x == current_goal.x + dx and robot.y == current_goal.y + dy:
-                        return True
+            tolerance = 5  # Define the tolerance range
+            robot.x, robot.y = camera.grid.getMidpoint(camera.grid.getRobotBack())
+            print("ROBOT X DISTANCE: " + str(abs(robot.x - current_goal.x)) + "ROBOT Y DISTANCE: " + str(abs(robot.y - current_goal.y)))
+            if abs(robot.x - current_goal.x) < tolerance and abs(robot.y - current_goal.y) < tolerance:
+                return True
             return False
-
+    
     #Hard coded testing stuff.
 
     # Initialize the graph with nodes for important objects.
@@ -419,7 +423,7 @@ def algo():
     obstacle = camera.grid.getObstacle()
     print("Check here!")
     print("Obstacle", obstacle)
-    print("Robot", robot)
+    print("Robot", robot)   
     print("Small goal", goal)
     oball = graph.add_node(*camera.grid.getMidpoint(camera.grid.getOball()))
     print("Oball", oball)

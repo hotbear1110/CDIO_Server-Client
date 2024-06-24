@@ -325,9 +325,9 @@ def runModel(cap):
 def runLowPerformanceModel(cap):
     global grid
 
-    grid = Grid(cap.get(3), cap.get(4), 10)
+    grid = Grid(cap.get(3), cap.get(4), 25)
 
-    tmp_grid = Grid(cap.get(3), cap.get(4), 10)
+    tmp_grid = Grid(cap.get(3), cap.get(4), 25)
 
     print('Choose a model:')
 
@@ -373,6 +373,7 @@ def runLowPerformanceModel(cap):
                 tmp_grid.addBox(x1, y1, x2, y2, name)
 
         grid.copyGrid(tmp_grid)
+        print("test " + str(grid.getMidpoint(grid.getRobotBack())))
         if cv2.waitKey(1) == ord('q'):
             return
         tmp_grid.flushGrid()

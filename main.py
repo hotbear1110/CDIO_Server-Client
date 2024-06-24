@@ -48,7 +48,7 @@ def on_connect(client, userdata, flags, rc):
        
 def on_message(client, userdata, msg):
     msg.payload = float(msg.payload.decode("utf-8"))
-    print(msg.topic)
+    print(msg.topic + " " + str(msg.payload))
     if msg.topic == "moveBackward":
         t1 = threading.Thread(target=Client.moveBackward.move_backward, args=[msg.payload])
 
