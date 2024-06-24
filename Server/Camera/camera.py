@@ -61,6 +61,7 @@ class Grid:
         self.egg = [(0, 0), (0, 0)]
         self.obstacle = [(0, 0), (0, 0)]
         self.oBall = [(0, 0), (0, 0)]
+        self.tmp_wBalls = []
         self.wBalls = []
         self.goalSmall = [(0, 0), (0, 0)]
         self.goalLarge = [(0, 0), (0, 0)]
@@ -145,7 +146,7 @@ class Grid:
         positions = []
         
         if name == "WBall":
-            self.wBalls.append([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
+            self.tmp_wBalls.append([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "OBall":
             self.oBall = ([(min(math.ceil(max(pos_x1, 1)/self.precision), self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision), self.rows - 1)), (min(math.ceil(max(pos_x1, 1)/self.precision)+x_boxes, self.cols - 1), min(math.ceil(max(pos_y1, 1)/self.precision)+y_boxes, self.rows - 1))])
         elif name == "Egg":
@@ -194,7 +195,7 @@ class Grid:
         self.egg = grid.egg
         self.obstacle = grid.obstacle
         self.oBall = grid.oBall
-        self.wBalls = grid.wBalls
+        self.wBalls = grid.tmp_wBalls
         self.goalSmall = grid.goalSmall
         self.goalLarge = grid.goalLarge
 
