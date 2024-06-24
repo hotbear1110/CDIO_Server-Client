@@ -10,3 +10,9 @@ def move_stop():
 
     left.run_direct()
     right.run_direct()
+
+    while left_motor != 0 or right_motor != 0:
+        left.duty_cycle_sp = 0
+        right.duty_cycle_sp = 0
+        left.run_direct()
+        right.run_direct()
