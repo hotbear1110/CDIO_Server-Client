@@ -6,20 +6,14 @@ right = LargeMotor(OUTPUT_B)
 spinner = MediumMotor(OUTPUT_C)
 
 def move_stop(payload):
-    left.duty_cycle_sp=0
-    right.duty_cycle_sp=0
+    left.stop_action = "brake"
+    right.stop_action = "brake"
 
-    left.run_direct()
-    right.run_direct()
-
-    while left_motor != 0 or right_motor != 0:
-        left.duty_cycle_sp = 0
-        right.duty_cycle_sp = 0
-        left.run_direct()
-        right.run_direct()
+    left.reset(stop_action = "brake")
+    right.reset(stop_action = "brake")
 
     if payload == 1:
-        spinner.duty_cycle_sp=0
-        spinner.run_direct()
+        spinner.stop_action = "brake"
+        spinner.reset(stop_action = "brake")
 
     

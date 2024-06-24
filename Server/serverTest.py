@@ -1,41 +1,12 @@
 #!/usr/bin/env python3
 
-import server
+import Camera.server as server
 import time
 
-server.sendSpinForward()
-
-server.sendMoveForward()
-time.sleep(3)
+server.sendMoveForward(50)
+time.sleep(10)
 
 server.sendMoveStop()
-
-server.sendMoveLeft()
-time.sleep(5)
-
-server.sendMoveForward()
-time.sleep(1)
-
-server.sendMoveStop()
-
-server.sendMoveLeft()
-time.sleep(5)
-
-server.sendMoveForward()
-time.sleep(3)
-
-server.sendMoveStop()
-
-server.sendMoveRight()
-time.sleep(5)
-
-server.sendMoveForward()
-time.sleep(1)
-
-server.sendMoveStop()
-
-server.sendMoveRight()
-time.sleep(5)
 
 """
 server.sendSpinForward()

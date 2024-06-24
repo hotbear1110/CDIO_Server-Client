@@ -15,6 +15,7 @@ import Client.moveStop
 import Client.moveWiggle
 import signal
 import sys
+import threading
 
 from ev3dev2.sound import Sound
 
@@ -49,9 +50,13 @@ def on_message(client, userdata, msg):
     msg.payload = float(msg.payload.decode("utf-8"))
     print(msg.topic)
     if msg.topic == "moveBackward":
-        Client.moveBackward.move_backward(msg.payload)
+        t1 = threading.Thread(target=Client.moveBackward.move_backward, args=[msg.payload])
+
+        t1.start()
     elif msg.topic == "moveForward":
-        Client.moveForward.move_forward(msg.payload)
+        t1 = threading.Thread(target=Client.moveForward.move_forward, args=[msg.payload])
+
+        t1.start()
     elif msg.topic == "moveLeft":
         Client.moveLeft.move_left(msg.payload)
     elif msg.topic == "moveLeftBackward":
