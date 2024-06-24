@@ -177,6 +177,7 @@ class Grid:
         return positions
 
     def flushGrid(self):
+        self.tmp_wBalls = []
         self.boxes = [[Box() for j in range(self.rows)] for i in range(self.cols)]
 
     def copyGrid(self, grid):
@@ -234,7 +235,7 @@ def runModel(cap):
 
     while True:
         success, img = cap.read()
-        results = model(img, stream=True)
+        results = model(img, stream=True, verbose=False)
 
         objects = []
 
@@ -349,7 +350,7 @@ def runLowPerformanceModel(cap):
 
     while True:
         success, img = cap.read()
-        results = model(img, stream=True)
+        results = model(img, stream=True, verbose=False)
 
         # coordinates
         for r in results:
