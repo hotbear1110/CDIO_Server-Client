@@ -365,7 +365,7 @@ def algo():
             robot.x = current_goal.x
             robot.y = current_goal.y
             if is_robot_on_node(current_goal):
-                graph.nodes.pop(current_goal)
+                graph.nodes.remove_node(current_goal)
             return
 
     def find_closest_ball(self):
