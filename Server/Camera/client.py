@@ -329,9 +329,12 @@ def algo():
             robot = graph.robot
             server.sendSpinForward()
             server.sendMoveForward(50)
+            temp = robot
             while not is_robot_on_node(current_goal):
-                robot = graph.nodes[(robot.x, robot.y)]  # Update robot position
-            server.sendMoveStop()
+                robot = camera.grid.getMidpoint(camera.grid.getRobotBack())  # Update robot position
+                if temp != robot:
+                    print(robot)
+                    temp = robot
 
         # For goal
         print("if current_goal == graph.goal_offset")
