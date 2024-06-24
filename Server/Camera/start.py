@@ -98,10 +98,13 @@ while usr_input == 0:
     elif x == '4':
         os.system('cls')
         print('Starting quick test with 1280x720')
+         print()
+        print('Width: ', end="")
         width = 1280
+        print('Height: ', end="")
         height = 720
         os.system('cls')
-        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(5, cv2.CAP_DSHOW)
 
         os.system('cls')
         if not cap.isOpened():
@@ -118,4 +121,3 @@ while usr_input == 0:
 
         t1.join()
         t2.join()
-
