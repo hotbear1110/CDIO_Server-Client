@@ -284,14 +284,6 @@ def algo():
     # TODO: Turn and drive towards said path.
     # TODO: Think the code doesnt keep going until this function is finished.
 
-    def turn_and_drive_towards_node (current_goal):
-
-        robot_node = graph.nodes[(robot.x, robot.y)]
-
-        #calculation of direction vector
-        direction_x = current_goal.x - robot_node.x
-        direction_y = current_goal.y - robot_node.y
-
     def turn_and_drive_towards_node(current_goal):
         robot_node = graph.nodes[(robot.x, robot.y)]
 
