@@ -294,6 +294,9 @@ def algo():
     # TODO: Turn and drive towards said path.
     # TODO: Think the code doesnt keep going until this function is finished.
 
+    #temp orientation
+    global orientation
+    orientation = 0
     def turn_and_drive_towards_node(current_goal):
 
         #Calculation of direction vector
@@ -301,6 +304,7 @@ def algo():
         direction_y = current_goal.y - robot.y
 
         def turn_to_target(target_x, target_y):
+            global orientation
             print("look here!!!")
             direction_x = robot.x - target_x
             print(direction_x)
@@ -309,8 +313,16 @@ def algo():
             target_angle = math.degrees(math.atan2(direction_y, direction_x))
             print(target_angle)
 
-            if target_angle > 180:
-                server.sendMoveLeft(round(360 - target_angle))
+            target_angle = target_angle - orientation
+            orientation = orientation + target_angle
+
+            if orientation > 180:
+                orientation = 0 - (360 - orientation)
+            elif orientation < -180:
+                orientation = 360 + orientation
+
+            if target_angle < 0:
+                server.sendMoveLeft(round(-target_angle))
             else:
                 server.sendMoveRight(round(target_angle))
 
