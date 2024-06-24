@@ -346,6 +346,8 @@ def algo():
             # Default update of robot coordinates
             robot.x = current_goal.x
             robot.y = current_goal.y
+            if is_robot_on_node(current_goal)
+                pop(current_goal)
             return
 
     def find_closest_ball(self):
@@ -382,6 +384,14 @@ def algo():
             graph.balls.append(node)
             print("adding balls now")
             print(node)
+
+    def is_robot_on_node(current_goal):
+            tolerance = 3  # Define the tolerance range
+            for dx in range(-tolerance, tolerance + 1):
+                for dy in range(-tolerance, tolerance + 1):
+                    if robot.x == current_goal.x + dx and robot.y == current_goal.y + dy:
+                        return True
+            return False
 
     #Hard coded testing stuff.
 
