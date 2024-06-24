@@ -302,7 +302,6 @@ def algo():
         #Calculation of direction vector
         direction_x = current_goal.x - robot.x
         direction_y = current_goal.y - robot.y
-
         def turn_to_target(target_x, target_y):
             global orientation
             print("look here!!!")
@@ -330,9 +329,8 @@ def algo():
             robot = graph.robot
             server.sendSpinForward()
             server.sendMoveForward(50)
-            while robot.x != target_x or robot.y != target_y:
+            while not is_robot_on_node(current_goal):
                 robot = graph.nodes[(robot.x, robot.y)]  # Update robot position
-
             server.sendMoveStop()
 
         # For goal
@@ -358,8 +356,8 @@ def algo():
             # Default update of robot coordinates
             robot.x = current_goal.x
             robot.y = current_goal.y
-            if is_robot_on_node(current_goal)
-                pop(current_goal)
+            if is_robot_on_node(current_goal):
+                graph.nodes.pop(current_goal)
             return
 
     def find_closest_ball(self):
@@ -445,24 +443,19 @@ def algo():
 
     # Logic.allign()
     # First goal node.
-    # current_goal = graph.nodes[(oball.x, oball.y)]
-
-    # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
-    # draw_graph(graph, path)
-
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
-
     turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
-    graph.remove_node(oball.x,oball.y)
+    # graph.remove_node(oball.x,oball.y)
     goal = graph.goal_offset
     current_goal = goal
     graph.update_edges(current_goal, robot)
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
     turn_and_drive_towards_node(current_goal)
+
     # Third goal node.
     print(camera.grid.getWballs())
     print(len(camera.grid.getWballs()))
