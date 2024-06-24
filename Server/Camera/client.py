@@ -345,6 +345,7 @@ def algo():
         if current_goal == graph.goal_offset:
             turn_to_target(*current_goal)
             move_to_target(current_goal.x, current_goal.y)
+            turn_to_target(graph.goal)
             server.sendSpinBackward(50)
             robot.x = current_goal.x
             robot.y = current_goal.y
