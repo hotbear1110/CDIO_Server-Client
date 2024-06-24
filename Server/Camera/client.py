@@ -375,7 +375,7 @@ def algo():
             graph.balls.append(node)
             print("adding balls now")
             print(node)
-    def is_ball_on_node(current_goal):
+    def is_robot_on_node(current_goal):
             tolerance = 3  # Define the tolerance range
             for dx in range(-tolerance, tolerance + 1):
                 for dy in range(-tolerance, tolerance + 1):
