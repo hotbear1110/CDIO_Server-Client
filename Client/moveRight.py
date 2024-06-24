@@ -4,8 +4,8 @@ from ev3dev.auto import *
 # Variables
 speedright = 40  # Adjusted motor speeds for turning right
 speedleft = -40
-slow_speedright = 25  # Slower speed for fine-tuning the turn
-slow_speedleft = -25
+slow_speedright = 40  # Slower speed for fine-tuning the turn
+slow_speedleft = -40
 slowdown_threshold = 25  # Angle threshold to start slowing down
 
 # Initialize the motors and gyro sensor

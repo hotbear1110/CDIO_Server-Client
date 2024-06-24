@@ -20,7 +20,7 @@ def move_forward(payload):
     left.run_direct()
     right.run_direct()
 
-    while left.duty_cycle_sp != 0 and right.duty_cycle_sp != 0:
+    while int(left.duty_cycle_sp) != 0 and int(right.duty_cycle_sp) != 0:
 
         current_angle = gyro_sensor.value()
 

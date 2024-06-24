@@ -93,7 +93,7 @@ class Graph:
         self.balls = []  # List to store ball nodes
         self.obstacles = []
         self.robot = self.add_node(*camera.grid.getMidpoint(camera.grid.getRobotBack()))
-        self.goal = self.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
+        self.goal = self.add_node(*camera.grid.getMidpoint(camera.grid.getGoalLarge()))
 
         # Node outside goal
         if 0 <= self.goal.x <= 100:
@@ -327,6 +327,8 @@ def algo():
             else:
                 server.sendMoveRight(round(target_angle))
 
+            time.sleep(5)
+
         def move_to_target(target_x, target_y):
             robot = graph.robot
             server.sendSpinForward()
@@ -339,13 +341,14 @@ def algo():
                     temp = robot
                 time.sleep(1)
             server.sendMoveStop()
+            time.sleep(2)
 
         # For goal
         print("if current_goal == graph.goal_offset")
         if current_goal == graph.goal_offset:
-            turn_to_target(*current_goal)
+            turn_to_target(current_goal.x, current_goal.y)
             move_to_target(current_goal.x, current_goal.y)
-            turn_to_target(graph.goal)
+            turn_to_target(graph.goal.x, graph.goal.y)
             server.sendSpinBackward(50)
             robot.x = current_goal.x
             robot.y = current_goal.y
@@ -365,7 +368,7 @@ def algo():
             robot.x = current_goal.x
             robot.y = current_goal.y
             if is_robot_on_node(current_goal):
-                graph.nodes.remove_node(current_goal)
+                graph.remove_node(current_goal.x, current_goal.y)
             return
 
     def find_closest_ball(self):
@@ -471,13 +474,15 @@ def algo():
     # TODO: When camera.grid.getWballs() is fixed, this should work.
     add_balls()
     print("look here!!!")
-    print(graph.goal_offset)
-    robot = goal
+    #print(graph.goal_offset)
+    robot = current_goal
 
     # find_closest_ball(graph)
     for node in graph.balls:
         find_closest_ball(graph)
         turn_and_drive_towards_node(current_goal)
+        distances, path = shortest(graph, robot, current_goal)
+        draw_graph(graph, path)
 
     current_goal = goal
 
@@ -487,8 +492,8 @@ def algo():
     # Pass closest_node to graph.update_edges
 
     graph.update_edges(current_goal, robot)
-    distances, path = shortest(graph, robot, current_goal)
-    draw_graph(graph, path)
+
+    turn_and_drive_towards_node(current_goal)
 
     # graph.update_edges(current_goal, robot)
 
