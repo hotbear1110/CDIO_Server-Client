@@ -80,6 +80,9 @@ class Node:
     def __repr__(self):
         return self.__str__()
 
+    def __lt__(self, other):
+        return id(self) < id(other)
+
 
 class Graph:
 
@@ -87,7 +90,7 @@ class Graph:
         self.nodes = {}
         self.balls = []  # List to store ball nodes
         self.obstacles = []
-        self.robot = self.add_node(*camera.grid.getMidpoint(camera.grid.getRobot()))
+        self.robot = self.add_node(*camera.grid.getMidpoint(camera.grid.getRobotBack()))
         self.goal = self.add_node(*camera.grid.getMidpoint(camera.grid.getGoalSmall()))
 
         # Node outside goal
@@ -298,9 +301,13 @@ def algo():
         direction_y = current_goal.y - robot.y
 
         def turn_to_target(target_x, target_y):
-            direction_x = target_x - robot.x
+            print("look here!!!")
+            direction_x = robot.x - target_x
+            print(direction_x)
             direction_y = target_y - robot.y
-            target_angle = math.degrees(math.atan2(direction_y, direction_x)) % 360
+            print(direction_y)
+            target_angle = math.degrees(math.atan2(direction_y, direction_x))
+            print(target_angle)
 
             if target_angle > 180:
                 server.sendMoveLeft(round(360 - target_angle))
@@ -309,14 +316,15 @@ def algo():
 
         def move_to_target(target_x, target_y):
             robot = graph.robot
+            server.sendSpinForward()
+            server.sendMoveForward(50)
             while robot.x != target_x or robot.y != target_y:
-                server.sendSpinForward()
-                server.sendMoveForward(50)
                 robot = graph.nodes[(robot.x, robot.y)]  # Update robot position
 
             server.sendMoveStop()
 
         # For goal
+        print("if current_goal == graph.goal_offset")
         if current_goal == graph.goal_offset:
             turn_to_target(*current_goal)
             move_to_target(current_goal.x, current_goal.y)
