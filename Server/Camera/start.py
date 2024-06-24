@@ -106,7 +106,6 @@ while usr_input == 0:
         os.system('cls')
         cap = cv2.VideoCapture(5, cv2.CAP_DSHOW)
 
-        os.system('cls')
         if not cap.isOpened():
             print("Cannot open camera")
             exit()
