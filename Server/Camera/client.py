@@ -183,21 +183,21 @@ class Graph:
         return False
 
     # Testing function.
-    def add_balls(self, num_nodes):
-        for i in range(num_nodes):
-            x = -55 * (i + 1)
-            y = 100 / (i + 1)
-            if i == 2:
-                x = 15
-                y = 50
-            # x = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for x
-            # y = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for y
-            node = Node(x, y)
-            self.nodes[(x, y)] = node
-            self.balls.append(node)  # Add the new node to the balls list
-            # self.add_node(x, y)
-            print("adding balls now")
-            print(node)
+    # def add_balls(self, num_nodes):
+    #     for i in range(num_nodes):
+    #         x = -55 * (i + 1)
+    #         y = 100 / (i + 1)
+    #         if i == 2:
+    #             x = 15
+    #             y = 50
+    #         # x = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for x
+    #         # y = random.uniform(0, 15)  # Replace 0 and 10 with the desired range for y
+    #         node = Node(x, y)
+    #         self.nodes[(x, y)] = node
+    #         self.balls.append(node)  # Add the new node to the balls list
+    #         # self.add_node(x, y)
+    #         print("adding balls now")
+    #         print(node)
 
 
 def algo():
@@ -282,6 +282,7 @@ def algo():
         return distances, path
 
     # TODO: Turn and drive towards said path.
+    # TODO: Think the code doesnt keep going until this function is finished.
 
     def turn_and_drive_towards_node(current_goal):
 
@@ -310,6 +311,40 @@ def algo():
         # Updating the robots coordinates
         robot.x = current_goal.x
         robot.y = current_goal.y
+
+    def find_closest_ball(self):
+        min_distance = float('inf')
+        # graph.connect_all_nodes()
+        for node in graph.balls:  # Iterate over ball nodes only
+            print("look here 1")
+            # Calculate the shortest distance from the robot to the node
+            graph.update_edges(node, robot)
+            distances, path = shortest(graph, robot, node)
+            print(node)
+            print(distances[node])
+
+            # If the calculated distance is less than min_distance, update min_distance and closest_node
+            if node in distances and distances[node] < min_distance:
+                min_distance = distances[node]
+                print("look here 2")
+                print(node)
+                print(distances[node])
+                print(current_goal)
+                current_goal = node
+
+    def add_balls():
+        for ball in camera.grid.getWballs():
+            # Get the coordinates of the ball
+            x, y = ball
+
+            # Create a new node at these coordinates
+            node = Node(x, y)
+            graph.nodes[(x, y)] = node
+
+            # Add the new node to the balls list
+            graph.balls.append(node)
+            print("adding balls now")
+            print(node)
 
     #Hard coded testing stuff.
 
@@ -358,7 +393,7 @@ def algo():
 
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
 
-    # turn_and_drive_towards_node(current_goal)
+    turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
@@ -368,34 +403,23 @@ def algo():
     draw_graph(graph, path)
 
     # Third goal node.
-    graph.add_balls(3)
+    print(camera.grid.getWballs())
+    print(len(camera.grid.getWballs()))
+
+    # TODO: When camera.grid.getWballs() is fixed, this should work.
+    # add_balls()
     robot = goal
 
-    def find_closest_ball(self):
-        min_distance = float('inf')
-        # graph.connect_all_nodes()
-        for node in graph.balls:  # Iterate over ball nodes only
-            print("look here 1")
-            # Calculate the shortest distance from the robot to the node
-            graph.update_edges(node, robot)
-            distances, path = shortest(graph, robot, node)
-            print(node)
-            print(distances[node])
-
-            # If the calculated distance is less than min_distance, update min_distance and closest_node
-            if node in distances and distances[node] < min_distance:
-                min_distance = distances[node]
-                print("look here 2")
-                print(node)
-                print(distances[node])
-                print(current_goal)
-                current_goal = node
 
     # closest_node is now the closest node to the robot among the randomly generated nodes
     # Pass closest_node to graph.update_edges
+
+
     graph.update_edges(current_goal, robot)
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
+
+
     # graph.update_edges(current_goal, robot)
 
     # distances, path = shortest(graph, graph.nodes[(robot.x, robot.y)], current_goal)
