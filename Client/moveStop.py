@@ -3,13 +3,23 @@ from ev3dev2.auto import *
 
 left = LargeMotor(OUTPUT_A)
 right = LargeMotor(OUTPUT_B)
+spinner = MediumMotor(OUTPUT_C)
 
-def move_stop():
-    #stop both motors
-    left.stop(stop_action='hold')
-    right.stop(stop_action='hold')
+def move_stop(payload):
+    left.duty_cycle_sp=0
+    right.duty_cycle_sp=0
 
-    #ensure both motors are stopped
-    while left.state != [] or right.state != []:
-        left.stop(stop_action='hold')
-        right.stop(stop_action='hold')
+    left.run_direct()
+    right.run_direct()
+
+    while left_motor != 0 or right_motor != 0:
+        left.duty_cycle_sp = 0
+        right.duty_cycle_sp = 0
+        left.run_direct()
+        right.run_direct()
+
+    if payload == 1:
+        spinner.duty_cycle_sp=0
+        spinner.run_direct()
+
+    
