@@ -10,7 +10,6 @@ import math
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
-import server as server
 
 
 def draw_graph(graph, path=None):
@@ -376,7 +375,13 @@ def algo():
             graph.balls.append(node)
             print("adding balls now")
             print(node)
-
+def is_ball_on_node(current_goal):
+        tolerance = 3  # Define the tolerance range
+        for dx in range(-tolerance, tolerance + 1):
+            for dy in range(-tolerance, tolerance + 1):
+                if robot.x == current_goal.x + dx and robot.y == current_goal.y + dy:
+                    return True
+        return False
     #Hard coded testing stuff.
 
     # Initialize the graph with nodes for important objects.
