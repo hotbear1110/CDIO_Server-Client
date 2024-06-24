@@ -8,51 +8,7 @@ from moveLeft import *
 from moveStop import *
 import time
 
-
-spin_forward()
 move_forward(50)
 
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_forward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_forward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_forward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_backward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_backward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_backward(50)
-
-time.sleep(3)
-move_stop()
-
-time.sleep(2)
-move_backward(50)
-
-time.sleep(3)
+time.sleep(10)
 move_stop()
