@@ -11,11 +11,13 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import server as server
-
+counter = 0
 
 def draw_graph(graph, path=None):
-    if True:
-        return
+    # Create a figure with a fixed size
+    # plt.figure(figsize=(100, 100))  # Replace 10, 10 with your desired width and height
+    global counter  # Use the global counter
+    plt.figure(figsize=(10, 10))
     G = nx.Graph()
 
     for node in graph.nodes.values():
@@ -44,8 +46,17 @@ def draw_graph(graph, path=None):
             single_edge_labels[(node1, node2)] = "{:g}".format(cost)
 
     nx.draw_networkx_edge_labels(G, pos, edge_labels=single_edge_labels, label_pos=0.5, font_color='black',
-                                 font_size=12, clip_on=False)
+                                 font_size=12, clip_on=False,
+                                 bbox=dict(facecolor='none', edgecolor='none'))  # Set bbox to a transparent box
 
+    # Set the limits of the x and y axes
+    plt.xlim(0, 100)  # Replace -100 and 100 with your desired minimum and maximum x values
+    plt.ylim(0, 100)  # Replace -100 and 100 with your desired minimum and maximum y values
+    # Save the figure to a file with a unique filename
+    plt.savefig(f'graph_{counter}.png')
+
+    # Increment the counter
+    counter += 1
     plt.show()
 
 
@@ -213,7 +224,7 @@ class Graph:
 
 
 def algo():
-    time.sleep(20)
+    time.sleep(5)
     global grid
     start = 1
     graph = Graph()
@@ -372,24 +383,51 @@ def algo():
             return
 
     def find_closest_ball(self):
+        # global robot
+        # robot = self.robot
+        robot.x = self.robot.x
+        robot.y = self.robot.y
         min_distance = float('inf')
+
         # graph.connect_all_nodes()
-        for node in graph.balls:  # Iterate over ball nodes only
+        for node in self.balls:  # Iterate over ball nodes only
+            if (node.x, node.y) not in self.nodes:  # Skip over nodes that have been removed
+                continue
             print("look here 1")
+            print(robot)
             # Calculate the shortest distance from the robot to the node
-            graph.update_edges(node, robot)
-            distances, path = shortest(graph, robot, node)
+            self.update_edges(node, robot)
+            distances, path = shortest(self, robot, node)
             print(node)
             print(distances[node])
 
             # If the calculated distance is less than min_distance, update min_distance and closest_node
             if node in distances and distances[node] < min_distance:
                 min_distance = distances[node]
-                print("look here 2")
-                print(node)
-                print(distances[node])
-                print(current_goal)
                 current_goal = node
+                print("look here 2")
+                print(robot)
+
+                distances, path = shortest(self, robot, node)
+        print("look here 3")
+        print(robot)
+        print(self.robot, current_goal)
+        # robot=self.robot
+        # robot = self.robot
+        current_robot = robot
+        current_robot.x = self.robot.x
+        current_robot.y = self.robot.y
+
+        distances, path = shortest(graph, self.robot, current_goal)
+        draw_graph(graph, path)
+
+        self.robot = current_goal
+
+
+        self.remove_node(current_goal.x, current_goal.y)
+
+
+
 
     def add_balls():
         for ball in camera.grid.getWballs():
@@ -455,7 +493,7 @@ def algo():
     # Logic.allign()
     # First goal node.
     current_goal = graph.nodes[(current_goal.x, current_goal.y)]
-    turn_and_drive_towards_node(current_goal)
+    # turn_and_drive_towards_node(current_goal)
 
     # Second goal node.
     robot = oball
@@ -465,7 +503,7 @@ def algo():
     graph.update_edges(current_goal, robot)
     distances, path = shortest(graph, robot, current_goal)
     draw_graph(graph, path)
-    turn_and_drive_towards_node(current_goal)
+    # turn_and_drive_towards_node(current_goal)
 
     # Third goal node.
     print(camera.grid.getWballs())
@@ -475,14 +513,24 @@ def algo():
     add_balls()
     print("look here!!!")
     #print(graph.goal_offset)
-    robot = current_goal
-
+    run_once = 1
     # find_closest_ball(graph)
-    for node in graph.balls:
+    for node in list(graph.balls):
+        if(run_once):
+            print("once")
+            print("once")
+            print("once")
+            print("once")
+            graph.robot.x, graph.robot.y =goal.x, goal.y
+            run_once = 0
+
         find_closest_ball(graph)
-        turn_and_drive_towards_node(current_goal)
-        distances, path = shortest(graph, robot, current_goal)
-        draw_graph(graph, path)
+
+
+
+        # turn_and_drive_towards_node(current_goal)
+
+
 
     current_goal = goal
 
@@ -493,7 +541,7 @@ def algo():
 
     graph.update_edges(current_goal, robot)
 
-    turn_and_drive_towards_node(current_goal)
+    # turn_and_drive_towards_node(current_goal)
 
     # graph.update_edges(current_goal, robot)
 

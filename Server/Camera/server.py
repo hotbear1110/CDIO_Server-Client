@@ -7,7 +7,7 @@ MQTT_Broker = '192.168.125.34'
 
 
 client = mqtt.Client("publisher")
-client.connect(MQTT_Broker,1883,60)
+# client.connect(MQTT_Broker,1883,60)
 
 def sendMoveForward(payload=0):
   client.publish("moveForward", round(payload))
